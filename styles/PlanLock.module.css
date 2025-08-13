@@ -101,5 +101,3 @@
   .slide{ grid-template-columns: 1fr; }
 }
 
-/* 念のため横スクロール殺す */
-html, body { overflow-x: hidden; }
