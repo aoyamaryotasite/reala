@@ -1,14 +1,4 @@
-:root {
-  --ink: #0f172a; /* 濃いテキスト */
-  --muted: #64748b; /* サブテキスト */
-  --ring: rgba(0, 0, 0, 0.08);
-  --bg: #fff;
-  --blue: #3b82f6;
-  --lime: rgba(163, 230, 53, 0.6);
-  --yellow: rgba(253, 224, 71, 0.6);
-  --green: rgba(134, 239, 172, 0.6);
-  --radius: 16px;
-}
+
 
 .wrap {
   position: relative;

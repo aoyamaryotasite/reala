@@ -1,4 +1,4 @@
-import "./globals.css";
+import "../styles/globals.css";
 
 import { Noto_Serif } from "next/font/google";
 
