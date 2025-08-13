@@ -1,0 +1,294 @@
+:root {
+  --ink: #0f172a; /* 濃いテキスト */
+  --muted: #64748b; /* サブテキスト */
+  --ring: rgba(0, 0, 0, 0.08);
+  --bg: #fff;
+  --blue: #3b82f6;
+  --lime: rgba(163, 230, 53, 0.6);
+  --yellow: rgba(253, 224, 71, 0.6);
+  --green: rgba(134, 239, 172, 0.6);
+  --radius: 16px;
+}
+
+.wrap {
+  position: relative;
+  background: var(--bg);
+  padding: 2.5rem 1.5rem 25rem;
+  margin: 0 auto;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  color: var(--ink);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+.brandSub {
+  color: #94a3b8;
+  margin-left: 0.25rem;
+}
+
+.applyBtn {
+  background: var(--blue);
+  color: #fff;
+  border-radius: 999px;
+  padding: 1.55rem 1.1rem;
+  font-size: 1.4rem;
+  z-index: 9;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 1px rgba(0, 0, 0, 0.05);
+  max-width: 300px;
+  width: 100%;
+  text-align: center;
+}
+.applyBtn:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.4);
+  outline-offset: 2px;
+}
+.applyBtn:hover {
+  filter: brightness(1.05);
+}
+
+.headings {
+  z-index: 10;
+  text-align: center;
+  margin-top: 5.25rem;
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.title {
+  font-size: clamp(2rem, 3.5vw + 1rem, 3.5rem);
+  line-height: 1.1;
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.lead {
+  margin-top: 0.8rem;
+  font-size: clamp(1rem, 0.6vw + 0.9rem, 1.125rem);
+  color: var(--muted);
+}
+
+/* 画像ステージ */
+.stage {
+  position: relative;
+  height: clamp(280px, 44vw, 460px);
+  margin-top: 1.5rem;
+}
+
+.card {
+  position: absolute;
+}
+.cardLeft {
+  left: 0;
+  z-index: 8;
+  bottom: 0;
+}
+.cardCenter {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+}
+.cardRight {
+  top: 22rem;
+  right: 9rem;
+  z-index: 8;
+}
+.cardBR {
+  right: 5rem;
+  top: 5rem;
+  z-index: 9;
+}
+
+.img {
+  display: block;
+  width: min(14rem, 32vw);
+  height: min(14rem, 32vw);
+  object-fit: cover;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  outline: 1px solid var(--ring);
+}
+.imgWide {
+  width: min(30rem, 72vw);
+  height: min(20rem, 34vw);
+  margin-top: 19vw;
+  margin-right: 7rem;
+}
+.imgLeft {
+  height: min(20rem, 32vw);
+  width: auto;
+}
+.imgRight {
+  height: min(29rem, 25vw);
+  width: 20rem;
+}
+
+.imgBRight {
+  width: min(16rem, 32vw);
+  height: min(19rem, 32vw);
+}
+.circle {
+  border-radius: 50%;
+  position: absolute;
+}
+.circle1 {
+  background-color: #ffec60;
+  width: 26%;
+  height: 40%;
+  top: -9%;
+  right: -10%;
+}
+
+.circle2 {
+  background-color: #ffaf60;
+  width: 5%;
+  height: 8%;
+  top: 50%;
+  right: 7%;
+}
+.circle3 {
+  background-color: #60ff6b;
+  width: 15%;
+  height: 23%;
+  top: 51%;
+  right: 27%;
+}
+.circle4 {
+  background-color: #e7ff60;
+  width: 7%;
+  height: 10%;
+  top: 29%;
+  right: 51%;
+}
+.circle5 {
+  background-color: #c5edff;
+  width: 7%;
+  height: 11%;
+  top: 53%;
+  right: 77%;
+}
+
+/* アニメ共通の初期状態 */
+.circleAnim,
+.photoAnim {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
+/* ① circle：透明→色づく + ふわっと */
+@keyframes circlePop {
+  0%   { opacity: 0; transform: scale(.8); filter: blur(4px); }
+  60%  { opacity: .9; transform: scale(1.03); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.circleAnim {
+  animation-name: circlePop;
+  animation-duration: var(--dur, 1s);
+  animation-delay: var(--delay, 0s);
+  animation-timing-function: cubic-bezier(.22,1,.36,1);
+  animation-fill-mode: both;
+}
+
+/* ② photo：透明→ふわっと浮上（軽くスケール） */
+@keyframes photoFloatIn {
+  0%   { opacity: 0; transform: translateY(12px) scale(.98); filter: blur(4px); }
+  60%  { opacity: .9; transform: translateY(-2px) scale(1.005); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.photoAnim {
+  animation-name: photoFloatIn;
+  animation-duration: var(--dur, 1s);
+  animation-delay: var(--delay, 0s);
+  animation-timing-function: cubic-bezier(.22,1,.36,1);
+  animation-fill-mode: both;
+}
+
+/* 低速回線/ユーザー配慮 */
+@media (prefers-reduced-motion: reduce) {
+  .circleAnim, .photoAnim {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+
+
+/* 装飾ライン */
+.lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+.lineLeft,
+.lineRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+.lineLeft {
+  left: clamp(8px, 2vw, 40px);
+  background: rgba(248, 113, 113, 0.4);
+}
+.lineRight {
+  right: clamp(8px, 2vw, 40px);
+  background: rgba(250, 204, 21, 0.4);
+}
+
+/* カラーブロブ */
+.blobs {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+.blob {
+  position: absolute;
+  filter: blur(18px);
+  border-radius: 999px;
+}
+.blobLime {
+  left: -40px;
+  top: 100px;
+  width: 220px;
+  height: 220px;
+  background: var(--lime);
+}
+.blobYellow {
+  right: -40px;
+  top: 20px;
+  width: 220px;
+  height: 220px;
+  background: var(--yellow);
+}
+.blobGreen {
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  width: 96px;
+  height: 96px;
+  background: var(--green);
+}
+
+/* レスポンシブ微調整 */
+@media (max-width: 768px) {
+  .wrap {
+    padding-bottom: 3rem;
+  }
+  .cardBR {
+    right: 2rem;
+  }
+}

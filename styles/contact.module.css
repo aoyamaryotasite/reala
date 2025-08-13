@@ -1,0 +1,88 @@
+.wrap {
+  background: #d9d9d9; /* 画像の薄いグレー */
+  padding: 40px 24px 48px;
+}
+
+.title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 32px;
+  letter-spacing: 2px;
+  text-align: center;
+  margin: 0 0 28px;
+  color: #222;
+}
+
+.form {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.label {
+  font-size: 16px;
+  color: #222;
+}
+
+.input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 16px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.06) inset, 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.button {
+  min-width: 220px;
+  border: none;
+  outline: none;
+  border-radius: 6px;
+  padding: 12px 18px;
+  font-size: 16px;
+  background: #37a0b6; /* 画像の青緑ボタン */
+  color: #fff;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.notice {
+  text-align: center;
+  margin-top: 14px;
+  color: #333;
+  font-size: 14px;
+}
+
+/* モバイル対応 */
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .label {
+    margin-top: 8px;
+  }
+}

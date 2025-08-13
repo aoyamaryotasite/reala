@@ -1,0 +1,119 @@
+.section {
+  padding: clamp(24px, 6vw, 80px) 0;
+}
+
+.wrap {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  min-height: 1640px; /* キャンバス確保（数値は好みで） */
+}
+
+/* 水色の背景ブロック（右寄せ） */
+.backdrop {
+  position: absolute;
+  right: 25%;
+  top: 6%;
+  width: 48%;
+  height: 46%;
+  background: #56ccf2; /* 水色 */
+  border-radius: 8px;
+  z-index: 1;
+}
+
+/* テキストボックス（背景の上に重ねる） */
+.textBox {
+  position: absolute;
+  right: 2%;
+  top: 11%;
+  width: 44%;
+  z-index: 2;
+}
+
+.title {
+  font-family: "Noto Serif", serif;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  margin: 0 0 0.6rem;
+  color: #111827;
+}
+
+.list {
+  margin: 0.5rem 0 0;
+  padding-left: 8.1rem;
+  color: #1f2937;
+  font-size: clamp(0.98rem, 0.35vw + 0.9rem, 1.125rem);
+  line-height: 1.8;
+  font-weight: bold;
+}
+.list li {
+  list-style: disc;
+}
+
+/* 画像カード共通 */
+.card {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+}
+.img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  outline: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* 位置指定（スクショ比で調整） */
+.cardTL {
+  width: 28%;
+  top: 15%;
+  left: 25%;
+}
+.cardTR {
+  width: 21%;
+  top: 29%;
+  right: 17%;
+}
+.cardBL {
+  width: 38%;
+  bottom: 31%;
+  left: 12%;
+}
+
+/* レスポンシブ：縦積み */
+@media (max-width: 900px) {
+  .wrap {
+    min-height: 0;
+    padding: 0 24px;
+  }
+  .backdrop {
+    position: static;
+    width: auto;
+    height: 180px;
+    margin: 0 auto 16px;
+  }
+  .textBox {
+    position: static;
+    width: auto;
+  }
+  .card,
+  .cardTL,
+  .cardTR,
+  .cardBL {
+    position: static;
+    width: 100%;
+    margin-top: 18px;
+  }
+}
+
+/* モーションを足したいとき（任意） */
+.card,
+.textBox {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}

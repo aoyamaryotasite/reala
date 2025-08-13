@@ -1,0 +1,109 @@
+.section{
+  background:#fff;
+  padding: min(8vw, 72px) 24px;
+  border-left: 1px solid rgba(248,113,113,.35);   /* 左の細ライン（任意） */
+  border-right:1px solid rgba(250,204,21,.35);    /* 右の細ライン（任意） */
+}
+.inner{
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.title{
+  font-family: "Noto Serif", serif; /* 他のフォントにしたい場合はここを変更 */
+  font-weight: 800;
+  letter-spacing: -.01em;
+line-height: 1.55;
+  font-size: clamp(2.2rem, 5.5vw, 5rem); /* 大きめ見出し */
+  color: #0f172a;
+  margin: 0 0 .75rem;
+}
+
+.lead{
+  max-width: 920px;
+  color: #334155;
+  line-height: 1.75;
+  font-size: clamp(.95rem, .4vw + .9rem, 1.125rem);
+  margin: 0 0 1.75rem;
+}
+
+.grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(12px, 2.2vw, 28px);
+  align-items: start;
+}
+
+/* カードの初期状態（非表示・下にズレ） */
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+/* 表示状態 */
+.card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.img{
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;        /* 正方形に揃える */
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  outline: 1px solid rgba(0,0,0,.06);
+}
+
+/* 見出し：初期はマスクしたまま（アニメ未開始） */
+.revealLeft{
+  position: relative;
+  display: inline-block;
+  -webkit-mask: linear-gradient(90deg,#000 0 0) no-repeat;
+          mask: linear-gradient(90deg,#000 0 0) no-repeat;
+  -webkit-mask-size: 0% 100%;
+          mask-size: 0% 100%;
+}
+
+/* ↓ JSで .start が付いたときにだけ露光アニメを走らせる */
+.start.revealLeft{
+  animation: revealX 1200ms cubic-bezier(.22,1,.36,1) forwards;
+}
+@keyframes revealX{
+  to{
+    -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
+  }
+}
+
+/* 段落：初期は隠す */
+.slideUp{
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+/* 見出しの animationend 後にJSから付く */
+.show{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* モーション減設定のユーザー配慮 */
+@media (prefers-reduced-motion: reduce){
+  .revealLeft,
+  .start.revealLeft{
+    animation: none !important;
+    -webkit-mask: none; mask: none;
+  }
+  .slideUp{ opacity: 1; transform: none; transition: none; }
+}
+
+/* スマホ */
+@media (max-width: 900px){
+  .grid{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px){
+  .grid{ grid-template-columns: 1fr; }
+}

@@ -1,0 +1,63 @@
+.section {
+  position: relative;
+  padding: clamp(24px, 5vw, 72px) 0;
+}
+
+.inner {
+  position: relative;
+  margin: 0 auto;
+}
+
+/* 背景画像 */
+.imageWrap {
+  position: relative;
+  width: 100%;
+  padding-top: 40%; /* 高さ比率調整 */
+}
+.imageWrap img{
+    position: absolute;
+    width: 71%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    color: transparent;
+}
+
+.image {
+  object-fit: cover;
+}
+
+/* テキスト */
+.textBox {
+  position: absolute;
+  top: 48%;
+  left:18%;
+  transform: translateY(-50%);
+  max-width: 50%; /* テキスト幅を制限 */
+  padding: 1.5rem;
+}
+
+.title {
+  font-family: "Noto Serif", serif;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  margin-bottom: 1rem;
+}
+
+.textBox p {
+  margin: 0.4rem 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* スマホ対応 */
+@media (max-width: 768px) {
+  .textBox {
+    position: static;
+    transform: none;
+    max-width: 100%;
+    background: none;
+    padding: 0;
+    margin-top: 1rem;
+  }
+}

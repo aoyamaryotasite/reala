@@ -1,0 +1,80 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import Image from "next/image";
+import styles from "../styles/PlanLock.module.css";
+
+type Slide = { img: string; title: string; sub?: string; body: string };
+
+export default function PlanSlide({
+  slide,
+  markFirst,
+  show = false,
+  wipe = false,
+  onWipeDone,
+}: {
+  slide: Slide;
+  markFirst?: boolean;
+  show?: boolean;
+  wipe?: boolean;
+  onWipeDone?: () => void;
+}) {
+  const figRef = useRef<HTMLDivElement>(null);
+
+  // ⭐ スライドが切り替わったら「常に見えている」状態で初期化
+  useEffect(() => {
+    const fig = figRef.current;
+    if (!fig) return;
+    fig.classList.remove(styles.wipe);
+    fig.classList.add(styles.opened); // ← これが効く（初期から表示）
+  }, [slide.img]);
+
+  // ⭐ wipe=true の時だけ「閉じて→めくり→開いたまま」にする
+  useEffect(() => {
+    if (!wipe) return;
+    const fig = figRef.current;
+    if (!fig) return;
+
+    const cover = fig.querySelector<HTMLElement>(`.${styles.cover}`);
+    if (!cover) return;
+
+    // 1) いったん閉じる（opened外す）→ reflow して位置確定
+    fig.classList.remove(styles.opened);
+    // reflow
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    cover.offsetHeight;
+
+    // 2) めくり開始（wipe付与）
+    const onEnd = () => {
+      fig.classList.remove(styles.wipe);
+      fig.classList.add(styles.opened); // 3) 終了後は開いたまま保持
+      cover.removeEventListener("animationend", onEnd);
+      onWipeDone?.();
+    };
+    fig.classList.add(styles.wipe);
+    cover.addEventListener("animationend", onEnd);
+
+    return () => cover.removeEventListener("animationend", onEnd);
+  }, [wipe, onWipeDone]);
+
+  return (
+    <div className={`${styles.slide} ${show ? styles.in : ""}`}>
+      <div
+        ref={figRef}
+        className={styles.figure}
+        data-first={markFirst ? "true" : undefined}
+      >
+        <div className={styles.cover} aria-hidden />
+        <Image src={slide.img} alt="" width={1200} height={800} className={styles.img} />
+      </div>
+
+      <div className={styles.text}>
+        <h3 className={styles.h}>
+          {slide.title}
+          {slide.sub && <small className={styles.sub}> ({slide.sub})</small>}
+        </h3>
+        <p className={styles.p}>{slide.body}</p>
+      </div>
+    </div>
+  );
+}
