@@ -1,70 +1,69 @@
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
-import { z } from 'zod';
+import { Resend } from 'resend';
 
-const schema = z.object({
-  firstName: z.string().trim().min(1),
-  lastName:  z.string().trim().min(1),
-  email:     z.string().trim().email(),
-  country:   z.string().trim().min(1),
-  content:   z.string().trim().min(1),
-});
+export const runtime = 'nodejs'; // ← Edgeだと一部ライブラリで落ちるため明示
 
-function transporter() {
-  // Gmail SMTP
-  return nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,              // 587 を使うなら secure: false にして TLS
-    secure: true,           // 465: true / 587: false (+requireTLS: true推奨)
-    auth: {
-      user: process.env.GMAIL_USER!,
-      pass: process.env.GMAIL_APP_PASSWORD!,
-    },
-  });
+function need(name: string) {
+  const v = process.env[name];
+  if (!v) throw new Error(`Missing env: ${name}`);
+  return v;
 }
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const data = schema.parse(body);
+    const b = await req.json().catch(() => ({}));
 
-    const t = transporter();
+    // 超簡易バリデーション（足りない項目は 400 に）
+    const fields = ['firstName', 'lastName', 'email', 'country', 'content'] as const;
+    for (const k of fields) {
+      if (!b?.[k]?.toString()?.trim()) {
+        return NextResponse.json({ ok: false, error: `Missing field: ${k}` }, { status: 400 });
+      }
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)) {
+      return NextResponse.json({ ok: false, error: 'Invalid email' }, { status: 400 });
+    }
 
-    const subject = `New inquiry from ${data.firstName} ${data.lastName}`;
-    const plainText = [
-      `Name: ${data.firstName} ${data.lastName}`,
-      `Email: ${data.email}`,
-      `Country: ${data.country}`,
+    const resend = new Resend(need('RESEND_API_KEY'));
+    const to = need('CONTACT_TO');
+    // Gmail などは From に使えません。未設定なら Resend のデフォルトを使う
+    const from = process.env.CONTACT_FROM?.trim() || 'Your Site <onboarding@resend.dev>';
+
+    const subject = `New inquiry from ${b.firstName} ${b.lastName}`;
+    const text = [
+      `Name: ${b.firstName} ${b.lastName}`,
+      `Email: ${b.email}`,
+      `Country: ${b.country}`,
       '',
       'Content:',
-      data.content,
+      b.content,
     ].join('\n');
 
-    // あなた宛に通知
-    await t.sendMail({
-      from: process.env.CONTACT_FROM || process.env.GMAIL_USER!,
-      to: process.env.CONTACT_TO!,
-      replyTo: data.email, // 返信で送信者に届く
+    // あなた宛
+    const r1 = await resend.emails.send({
+      from,
+      to,
+      reply_to: b.email,
       subject,
-      text: plainText,
+      text,
     });
 
-    // 送信者へ自動返信（不要なら削除）
-    await t.sendMail({
-      from: process.env.CONTACT_FROM || process.env.GMAIL_USER!,
-      to: data.email,
+    // 自動返信（不要ならこのブロック削除OK）
+    const r2 = await resend.emails.send({
+      from,
+      to: b.email,
       subject: 'Thanks for your inquiry',
-      text:
-        `Hi ${data.firstName},\n\nThanks for reaching out! We received your message and will get back to you shortly.\n\n---\n${plainText}`,
+      text: `Hi ${b.firstName},\n\nThanks for reaching out!\n\n---\n${text}`,
     });
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, r1, r2 }, { status: 200 });
   } catch (err: any) {
-    console.error('[contact] error:', err);
-    // zod のバリデーションエラー
-    if (err?.issues) {
-      return NextResponse.json({ ok: false, error: 'Bad Request', detail: err.issues }, { status: 400 });
-    }
-    return NextResponse.json({ ok: false, error: 'Server error' }, { status: 500 });
+    // ここで詳細をログに出す（Vercelの Functions → Logs で見える）
+    console.error('[/api/contact] ERROR:', err?.message || err, err);
+    // Resend のエラーオブジェクトは details を持つことがある
+    return NextResponse.json(
+      { ok: false, error: err?.message || 'Server error', details: err?.response || err?.data || null },
+      { status: 500 },
+    );
   }
 }
