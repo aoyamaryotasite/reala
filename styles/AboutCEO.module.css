@@ -1,8 +1,3 @@
-:root{
-  --ink:#162026;
-  --muted:#9aa7b1;
-  --panel:#e6f0f7; /* 淡い水色 */
-}
 
 .wrap{
   width:min(1100px,92vw);
