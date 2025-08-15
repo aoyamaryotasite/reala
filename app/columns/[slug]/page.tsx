@@ -6,13 +6,17 @@ import { getColumnBySlug } from "../../../lib/microcms";
 import styles from "../page.module.css";
 import ColumnSidebar from "../../../components/ColumnSidebar";
 
-type Props = {
-  params: { slug: string };
-};
-
 export const revalidate = 600;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+// Propsは自作型でOK。searchParamsも追加しておくと安全。
+type PageParams = {
+  params: { slug: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
   const post = await getColumnBySlug(params.slug);
   if (!post) return {};
 
@@ -39,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ColumnDetail({ params }: Props) {
+export default async function ColumnDetail({ params }: { params: { slug: string } }) {
   const post = await getColumnBySlug(params.slug);
   if (!post) return notFound();
 
