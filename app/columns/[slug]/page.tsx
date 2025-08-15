@@ -8,14 +8,12 @@ import ColumnSidebar from "../../../components/ColumnSidebar";
 
 export const revalidate = 600;
 
-// Propsは自作型でOK。searchParamsも追加しておくと安全。
-type PageParams = {
-  params: { slug: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-};
+interface Params {
+  slug: string;
+}
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  { params }: { params: Params }
 ): Promise<Metadata> {
   const post = await getColumnBySlug(params.slug);
   if (!post) return {};
@@ -43,7 +41,11 @@ export async function generateMetadata(
   };
 }
 
-export default async function ColumnDetail({ params }: { params: { slug: string } }) {
+// コンポーネント側の型は引数分解ではなく props 全体の型を指定
+export default async function ColumnDetail(
+  props: { params: Params }
+) {
+  const { params } = props;
   const post = await getColumnBySlug(params.slug);
   if (!post) return notFound();
 
