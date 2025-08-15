@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import type PageProps from "next";
 import ColumnCard from "../../../../components/ColumnCard";
 import CategoryNav from "../../../../components/CategoryNav";
 import { getCategories, getColumns } from "../../../../lib/microcms";
 
-type Props = PageProps<{ category: string }, { page?: string }>;
+type Props = {
+  params: { category: string };
+  searchParams?: { page?: string };
+};
 
 export const revalidate = 600;
 
