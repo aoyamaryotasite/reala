@@ -1,4 +1,5 @@
-import type { Metadata, PageProps } from "next";
+import type { Metadata } from "next";
+import type PageProps from "next";
 import ColumnCard from "../../../../components/ColumnCard";
 import CategoryNav from "../../../../components/CategoryNav";
 import { getCategories, getColumns } from "../../../../lib/microcms";
@@ -8,7 +9,7 @@ type Props = PageProps<{ category: string }, { page?: string }>;
 export const revalidate = 600;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { category } = await params;
+  const { category } = params;
   const url = `https://www.example.com/columns/category/${category}`;
   return {
     title: `Category: ${category}`,
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const PER_PAGE = 10;
 
 export default async function CategoryPage({ params, searchParams }: Props) {
-  const { category } = await params;
+  const { category } = params;
   const page = Number(searchParams?.page ?? "1");
   const offset = (page - 1) * PER_PAGE;
 
