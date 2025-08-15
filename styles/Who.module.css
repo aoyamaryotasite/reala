@@ -1,12 +1,11 @@
 .section {
-  padding: clamp(24px, 6vw, 80px) 0;
+padding-top: 5vw;
 }
 
 .wrap {
   position: relative;
   margin: 0 auto;
-  overflow: hidden;
-  min-height: 1640px; /* キャンバス確保（数値は好みで） */
+  min-height: 750px; /* キャンバス確保（数値は好みで） */
 }
 
 /* 水色の背景ブロック（右寄せ） */
@@ -15,8 +14,8 @@
   right: 25%;
   top: 6%;
   width: 48%;
-  height: 46%;
-  background: #56ccf2; /* 水色 */
+  height: 76%;
+  background: #285f65; /* 水色 */
   border-radius: 8px;
   z-index: 1;
 }
@@ -75,12 +74,12 @@
 }
 .cardTR {
   width: 21%;
-  top: 29%;
+  top: 45%;
   right: 17%;
 }
 .cardBL {
   width: 38%;
-  bottom: 31%;
+  bottom: 1%;
   left: 12%;
 }
 

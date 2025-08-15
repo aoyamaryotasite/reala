@@ -1,42 +1,55 @@
-
-
 .wrap {
   position: relative;
-  background: var(--bg);
-  padding: 2.5rem 1.5rem 25rem;
+  background: #285f65;
+  padding: 5rem 1.5rem 2rem;
   margin: 0 auto;
 }
 
 .topbar {
+  padding: 4px 0;
+
+  background-color: #f0eae2;
+  width: 100%;
+  position: fixed;
+  z-index: 999;
+}
+.inner{
+  max-width:1200px;
+  width:100%;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .brand {
-  color: var(--ink);
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
+  color: var(--ink); 
+  letter-spacing: .02em;
+  display: flex;
+  font-size: 1.3rem;
 }
 .brandSub {
-  color: #94a3b8;
+  color: #fff;
   margin-left: 0.25rem;
 }
 
 .applyBtn {
-  background: var(--blue);
-  color: #fff;
-  border-radius: 999px;
-  padding: 1.55rem 1.1rem;
-  font-size: 1.4rem;
-  z-index: 9;
-  font-weight: 700;
-  text-decoration: none;
-  display: inline-block;
-  box-shadow: 0 1px rgba(0, 0, 0, 0.05);
-  max-width: 300px;
-  width: 100%;
-  text-align: center;
+    color: #fff;
+    z-index: 9;
+    text-align: center;
+    background: #373737;
+    width: 100%;
+    max-width: 186px;
+    padding: .5rem .8rem;
+    font-size: 1rem;
+    height: 100%;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    justify-content: center;
+    right: 0;
 }
 .applyBtn:focus-visible {
   outline: 3px solid rgba(59, 130, 246, 0.4);
@@ -49,236 +62,112 @@
 .headings {
   z-index: 10;
   text-align: center;
-  margin-top: 5.25rem;
   width: 100%;
+  margin-top: 30.25rem;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 2%;
+  text-align: right;
+  color: #fff;
+}
+.headings p{
+  line-height: 3;
 }
 .title {
-  font-size: clamp(2rem, 3.5vw + 1rem, 3.5rem);
+  font-size: 5vw;
   line-height: 1.1;
-  color: var(--ink);
+  font-family: serif;
   font-weight: 800;
   letter-spacing: -0.01em;
-}
-.lead {
-  margin-top: 0.8rem;
-  font-size: clamp(1rem, 0.6vw + 0.9rem, 1.125rem);
-  color: var(--muted);
-}
-
-/* 画像ステージ */
-.stage {
+} /* ====== big slide: continuous auto loop ====== */
+.slider {
   position: relative;
-  height: clamp(280px, 44vw, 460px);
-  margin-top: 1.5rem;
+  width: 100%;
+  height: clamp(420px, 90vh, 760px);
 }
 
-.card {
+.viewport {
   position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-.cardLeft {
-  left: 0;
-  z-index: 8;
-  bottom: 0;
-}
-.cardCenter {
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9;
-}
-.cardRight {
-  top: 22rem;
-  right: 9rem;
-  z-index: 8;
-}
-.cardBR {
-  right: 5rem;
-  top: 5rem;
-  z-index: 9;
+.viewport::-webkit-scrollbar {
+  display: none;
 }
 
-.img {
-  display: block;
-  width: min(14rem, 32vw);
-  height: min(14rem, 32vw);
+/* 高さを親から引き継がせる（←重要） */
+.belt,
+.set {
+  height: 100%;
+}
+
+.belt {
+  --beltW: 2000px; /* fallback */
+  --dur: 30s; /* fallback */
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  width: max-content;
+  animation: beltLoop var(--dur) linear infinite;
+}
+
+@keyframes beltLoop {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-1 * var(--beltW)));
+  }
+}
+
+.set {
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+}
+
+/* Image(fill) の直親を relative に（←超重要） */
+.slide {
+  position: relative; /* ← 追加 */
+  --cardW: clamp(280px, 36vw, 560px);
+  width: var(--cardW);
+  height: 100%;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+/* Next/Image に任せる。object-fit だけ指定 */
+.media {
   object-fit: cover;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  outline: 1px solid var(--ring);
-}
-.imgWide {
-  width: min(30rem, 72vw);
-  height: min(20rem, 34vw);
-  margin-top: 19vw;
-  margin-right: 7rem;
-}
-.imgLeft {
-  height: min(20rem, 32vw);
-  width: auto;
-}
-.imgRight {
-  height: min(29rem, 25vw);
-  width: 20rem;
+  width: 100%;
+  height: 100%;
 }
 
-.imgBRight {
-  width: min(16rem, 32vw);
-  height: min(19rem, 32vw);
-}
-.circle {
-  border-radius: 50%;
+.cap {
   position: absolute;
-}
-.circle1 {
-  background-color: #ffec60;
-  width: 26%;
-  height: 40%;
-  top: -9%;
-  right: -10%;
-}
-
-.circle2 {
-  background-color: #ffaf60;
-  width: 5%;
-  height: 8%;
-  top: 50%;
-  right: 7%;
-}
-.circle3 {
-  background-color: #60ff6b;
-  width: 15%;
-  height: 23%;
-  top: 51%;
-  right: 27%;
-}
-.circle4 {
-  background-color: #e7ff60;
-  width: 7%;
-  height: 10%;
-  top: 29%;
-  right: 51%;
-}
-.circle5 {
-  background-color: #c5edff;
-  width: 7%;
-  height: 11%;
-  top: 53%;
-  right: 77%;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  margin: 0;
+  padding: 8px 12px;
+  font-size: clamp(12px, 1.1vw, 14px);
+  line-height: 1.2;
+  color: #fafa00;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
 }
 
-/* アニメ共通の初期状態 */
-.circleAnim,
-.photoAnim {
-  opacity: 0;
-  will-change: transform, opacity, filter;
-}
-
-/* ① circle：透明→色づく + ふわっと */
-@keyframes circlePop {
-  0%   { opacity: 0; transform: scale(.8); filter: blur(4px); }
-  60%  { opacity: .9; transform: scale(1.03); filter: blur(0); }
-  100% { opacity: 1; transform: scale(1); }
-}
-.circleAnim {
-  animation-name: circlePop;
-  animation-duration: var(--dur, 1s);
-  animation-delay: var(--delay, 0s);
-  animation-timing-function: cubic-bezier(.22,1,.36,1);
-  animation-fill-mode: both;
-}
-
-/* ② photo：透明→ふわっと浮上（軽くスケール） */
-@keyframes photoFloatIn {
-  0%   { opacity: 0; transform: translateY(12px) scale(.98); filter: blur(4px); }
-  60%  { opacity: .9; transform: translateY(-2px) scale(1.005); filter: blur(0); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-.photoAnim {
-  animation-name: photoFloatIn;
-  animation-duration: var(--dur, 1s);
-  animation-delay: var(--delay, 0s);
-  animation-timing-function: cubic-bezier(.22,1,.36,1);
-  animation-fill-mode: both;
-}
-
-/* 低速回線/ユーザー配慮 */
 @media (prefers-reduced-motion: reduce) {
-  .circleAnim, .photoAnim {
+  .belt {
     animation: none !important;
-    opacity: 1 !important;
     transform: none !important;
-    filter: none !important;
   }
 }
 
-
-
-/* 装飾ライン */
-.lines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-}
-.lineLeft,
-.lineRight {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-}
-.lineLeft {
-  left: clamp(8px, 2vw, 40px);
-  background: rgba(248, 113, 113, 0.4);
-}
-.lineRight {
-  right: clamp(8px, 2vw, 40px);
-  background: rgba(250, 204, 21, 0.4);
-}
-
-/* カラーブロブ */
-.blobs {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-}
-.blob {
-  position: absolute;
-  filter: blur(18px);
-  border-radius: 999px;
-}
-.blobLime {
-  left: -40px;
-  top: 100px;
-  width: 220px;
-  height: 220px;
-  background: var(--lime);
-}
-.blobYellow {
-  right: -40px;
-  top: 20px;
-  width: 220px;
-  height: 220px;
-  background: var(--yellow);
-}
-.blobGreen {
-  left: 50%;
-  top: 52%;
-  transform: translate(-50%, -50%);
-  width: 96px;
-  height: 96px;
-  background: var(--green);
-}
-
-/* レスポンシブ微調整 */
 @media (max-width: 768px) {
-  .wrap {
-    padding-bottom: 3rem;
-  }
-  .cardBR {
-    right: 2rem;
+  .slide {
+    --cardW: 85vw;
   }
 }

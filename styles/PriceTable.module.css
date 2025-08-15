@@ -1,0 +1,105 @@
+:root {
+  --bg: #ffffff;
+  --ink: #1d2a2e;
+  --muted: #eef1f3;
+  --alt: #efefef;           /* グレーの交互行 */
+  --brand-100: #d7eef4;     /* 淡い水色 */
+  --brand-300: #7cc3d6;     /* 少し濃い水色系 */
+  --shadow: 0 10px 24px rgba(0,0,0,.06);
+  --radius: 18px;
+}
+
+.wrap {
+  width: min(1100px, 92vw);
+  margin: 72px auto 100px;
+}
+
+.title {
+  text-align: center;
+  font-size: clamp(28px, 3.5vw, 42px);
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 8px 0 28px;
+}
+
+.tableCard {
+  padding: clamp(14px, 2.2vw, 22px);
+}
+
+.headerRow {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr; /* ← 3列に変更 */
+  gap: clamp(12px, 1.8vw, 18px);
+  margin-bottom: clamp(14px, 2vw, 18px);
+}
+
+.headerCell {
+  background: #40A7BE;
+  color: #fff;
+  font-weight: 700;
+  padding: 18px 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.body {
+  display: grid;
+  gap: clamp(10px, 1.2vw, 14px);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr; /* ← 3列に変更 */
+  gap: clamp(12px, 1.8vw, 18px);
+  align-items: center;
+}
+
+.rowAlt .cellLabel {
+  background: var(--alt);
+}
+
+.cell {
+  background: var(--brand-100);
+  padding: 18px 20px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 600;
+  color: #27758b;
+}
+
+.cellLabel {
+  background: #e9ecef;
+  color: #5a6b74;
+  text-align: left;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .headerRow,
+  .row {
+    grid-template-columns: 1fr 1fr; /* モバイルでは2列 */
+  }
+
+  .headerCell:nth-child(1),
+  .headerCell:nth-child(2),
+  .row .cell:nth-child(1),
+  .row .cell:nth-child(2) {
+    margin-bottom: 8px;
+  }
+
+  .headerCell,
+  .cell {
+    text-align: left;
+  }
+
+  /* モバイルではカードを2列×2行に整列（1列目: Plan/JPY、2列目: USD） */
+  .row {
+    grid-template-areas:
+      "label priceJPY"
+      "priceUSD priceUSD";
+  }
+  .row .cell:nth-child(1) { grid-area: label; }
+  .row .cell:nth-child(2) { grid-area: priceJPY; }
+  .row .cell:nth-child(3) { grid-area: priceUSD; }
+}

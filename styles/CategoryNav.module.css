@@ -1,0 +1,4 @@
+.nav{ display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 24px; }
+.nav a{ padding:6px 10px; border:1px solid #e5e8ea; border-radius:8px; text-decoration:none; color:#2a3740; }
+.nav a:hover{ background:#f6f8f9; }
+.active{ background:#1f7aa7; color:#fff !important; border-color:#1f7aa7 !important; }

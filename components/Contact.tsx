@@ -1,45 +1,55 @@
 'use client';
-
 import { useState } from 'react';
 import styles from '../styles/contact.module.css';
 
 type FormState = {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
   country: string;
-  content: string;
+  japaneseLevel: string;
+  learningPurpose: string;
+  preferredDateTime1: string;
+  preferredDateTime2: string;
+  preferredDateTime3: string;
+  learningHistory: string;
+  otherMessage: string;
 };
 
 export default function Contact() {
   const [form, setForm] = useState<FormState>({
-    firstName: '',
-    lastName: '',
+    fullName: '',
     email: '',
     country: '',
-    content: '',
+    japaneseLevel: '',
+    learningPurpose: '',
+    preferredDateTime1: '',
+    preferredDateTime2: '',
+    preferredDateTime3: '',
+    learningHistory: '',
+    otherMessage: '',
   });
+
   const [submitting, setSubmitting] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
   const onChange =
     (key: keyof FormState) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm((p) => ({ ...p, [key]: e.target.value }));
 
   const validate = () => {
-    if (!form.firstName.trim()) return 'First Name is required.';
-    if (!form.lastName.trim()) return 'Last Name is required.';
+    if (!form.fullName.trim()) return 'Full Name is required.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return 'Valid email required.';
-    if (!form.country.trim()) return 'Country is required.';
-    if (!form.content.trim()) return 'Content is required.';
+    if (!form.country.trim()) return 'Country of Residence / Time Zone is required.';
+    if (!form.japaneseLevel) return 'Japanese Level is required.';
+    if (!form.learningPurpose) return 'Learning Purpose is required.';
+    if (!form.preferredDateTime1) return 'Preferred Date & Time (1st choice) is required.';
     return null;
   };
 
   const onSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  console.log('[Contact] submit clicked');  // ★ 追加
-  setNotice(null);
+    e.preventDefault();
+    setNotice(null);
 
     const err = validate();
     if (err) return setNotice(err);
@@ -53,43 +63,51 @@ export default function Contact() {
       });
       if (!res.ok) throw new Error('Request failed');
       setNotice('Thanks! We received your message.');
-      setForm({ firstName: '', lastName: '', email: '', country: '', content: '' });
-    } catch (e) {
+      setForm({
+        fullName: '',
+        email: '',
+        country: '',
+        japaneseLevel: '',
+        learningPurpose: '',
+        preferredDateTime1: '',
+        preferredDateTime2: '',
+        preferredDateTime3: '',
+        learningHistory: '',
+        otherMessage: '',
+      });
+    } catch {
       setNotice('Sorry, something went wrong. Please try again later.');
     } finally {
       setSubmitting(false);
     }
   };
 
+  // 時間選択肢（10:00〜18:00）
+  const timeOptions = Array.from({ length: 9 }, (_, i) => {
+    const hour = 10 + i;
+    return `${hour}:00`;
+  });
+
   return (
     <section className={styles.wrap} aria-labelledby="contact-heading">
       <h2 id="contact-heading" className={styles.title}>CONTACT</h2>
 
       <form className={styles.form} onSubmit={onSubmit} noValidate>
+        {/* 1. Full Name */}
         <div className={styles.row}>
-          <label htmlFor="firstName" className={styles.label}>First Name</label>
+          <label htmlFor="fullName" className={styles.label}>Full Name</label>
           <input
-            id="firstName"
+            id="fullName"
             className={styles.input}
-            value={form.firstName}
-            onChange={onChange('firstName')}
-            autoComplete="given-name"
+            value={form.fullName}
+            onChange={onChange('fullName')}
+            autoComplete="name"
           />
         </div>
 
+        {/* 2. Email Address */}
         <div className={styles.row}>
-          <label htmlFor="lastName" className={styles.label}>Last Name</label>
-          <input
-            id="lastName"
-            className={styles.input}
-            value={form.lastName}
-            onChange={onChange('lastName')}
-            autoComplete="family-name"
-          />
-        </div>
-
-        <div className={styles.row}>
-          <label htmlFor="email" className={styles.label}>EMail Address</label>
+          <label htmlFor="email" className={styles.label}>Email Address</label>
           <input
             id="email"
             type="email"
@@ -100,8 +118,9 @@ export default function Contact() {
           />
         </div>
 
+        {/* 3. Country of Residence / Time Zone */}
         <div className={styles.row}>
-          <label htmlFor="country" className={styles.label}>Country</label>
+          <label htmlFor="country" className={styles.label}>Country of Residence / Time Zone</label>
           <input
             id="country"
             className={styles.input}
@@ -111,14 +130,97 @@ export default function Contact() {
           />
         </div>
 
+        {/* 4. Japanese Level */}
         <div className={styles.row}>
-          <label htmlFor="content" className={styles.label}>Content</label>
+          <label htmlFor="japaneseLevel" className={styles.label}>Japanese Level</label>
+          <select
+            id="japaneseLevel"
+            className={styles.input}
+            value={form.japaneseLevel}
+            onChange={onChange('japaneseLevel')}
+          >
+            <option value="">-- Select Level --</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+
+        {/* 5. Learning Purpose */}
+        <div className={styles.row}>
+          <label htmlFor="learningPurpose" className={styles.label}>Learning Purpose</label>
+          <select
+            id="learningPurpose"
+            className={styles.input}
+            value={form.learningPurpose}
+            onChange={onChange('learningPurpose')}
+          >
+            <option value="">-- Select Purpose --</option>
+            <option value="JLPT">JLPT</option>
+            <option value="Travel">Travel</option>
+            <option value="Work">Work</option>
+            <option value="Hobby">Hobby</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        {/* 6. Preferred Date & Time (3 choices) */}
+        {[1, 2, 3].map((n) => (
+          <div className={styles.row} key={n}>
+            <label htmlFor={`preferredDateTime${n}`} className={styles.label}>
+              Preferred Date & Time ({n}{n === 1 ? 'st' : n === 2 ? 'nd' : 'rd'} choice)
+            </label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="date"
+                id={`preferredDate${n}`}
+                className={styles.input}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    [`preferredDateTime${n}`]: `${e.target.value} ${p[`preferredDateTime${n}`].split(' ')[1] || ''}`,
+                  }))
+                }
+              />
+              <select
+                className={styles.input}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    [`preferredDateTime${n}`]: `${p[`preferredDateTime${n}`].split(' ')[0] || ''} ${e.target.value}`,
+                  }))
+                }
+              >
+                <option value="">-- Time --</option>
+                {timeOptions.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        ))}
+
+        {/* 7. Japanese Learning History (Optional) */}
+        <div className={styles.row}>
+          <label htmlFor="learningHistory" className={styles.label}>Japanese Learning History (Optional)</label>
           <textarea
-            id="content"
+            id="learningHistory"
             className={`${styles.input} ${styles.textarea}`}
-            value={form.content}
-            onChange={onChange('content')}
-            rows={6}
+            value={form.learningHistory}
+            onChange={onChange('learningHistory')}
+            rows={3}
+          />
+        </div>
+
+        {/* 8. Other Messages / Questions (Optional) */}
+        <div className={styles.row}>
+          <label htmlFor="otherMessage" className={styles.label}>Other Messages / Questions (Optional)</label>
+          <textarea
+            id="otherMessage"
+            className={`${styles.input} ${styles.textarea}`}
+            value={form.otherMessage}
+            onChange={onChange('otherMessage')}
+            rows={3}
           />
         </div>
 

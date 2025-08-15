@@ -1,0 +1,114 @@
+:root{
+  --ink:#1f2a30;
+  --muted:#fff;
+  --rule:#fff;
+}
+
+.wrap{
+  width:min(900px,92vw);
+  margin:80px auto 110px;
+  font-family: serif;
+}
+
+.title{
+  text-align:center;
+  font-size:clamp(26px,3.2vw,36px);
+  letter-spacing:.18em;
+  font-weight:600;
+  margin:0 0 28px;
+  color:var(--ink);
+}
+
+/* セクション見出し【…】の上に余白を追加 */
+.section{
+  padding-top:22px;     /* ←ご要望の「見出しの上は少しパディング」 */
+  margin-top:14px;
+}
+
+.sectionTitle{
+  font-size:clamp(20px,2.6vw,28px);
+  font-weight:700;
+  color:var(--ink);
+  border-bottom:1px solid var(--rule);
+  padding-bottom:10px;
+}
+
+
+.item{
+  border-bottom:1px solid var(--rule);
+}
+
+.question{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:16px 6px;
+  background:transparent;
+  border:0;
+  cursor:pointer;
+  text-align:left;
+  font-family: serif;
+}
+
+.qLabel{
+  color:#737e86;
+  min-width:38px;
+  font-weight:600;
+}
+
+.qText{
+  flex:1;
+  color:#2a353b;
+  font-weight:600;
+}
+
+.chevron{
+  width: 12px;
+  height: 12px;
+  border-left: 2px solid #8b949a; /* ← 横線ではなく縦線に変更 */
+  border-bottom: 2px solid #8b949a;
+  transform: rotate(-45deg); /* ↓ 向きに調整 */
+  transition: transform .2s ease;
+}
+
+.chevronOpen{
+ transform: rotate(135deg); /* ↑ 向きに変更 */
+}
+
+.answerWrap{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .25s ease;
+}
+
+.open{
+  max-height:500px; /* 十分な高さ。必要に応じて調整 */
+}
+
+.answerInner{
+  display:flex;
+  gap:12px;
+  padding:4px 6px 16px 6px;
+}
+
+.aLabel{
+  color:#8a939a;
+  min-width:38px;
+  font-weight:600;
+}
+
+.aText{
+  color:#3a464d;
+  line-height:1.8;
+}
+
+.list{
+  margin:6px 0 0 1.2em;
+  padding:0;
+  list-style:disc;
+}
+
+@media (hover:hover){
+  .question:hover .qText{ opacity: 0.8; }
+}

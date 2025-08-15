@@ -26,7 +26,7 @@ export default function Who() {
         {/* 左上の写真 */}
         <figure className={`${styles.card} ${styles.cardTL}`}>
           <Image
-            src="/who/who1.png"
+            src="/who/who1.webp"
             alt=""
             width={820}
             height={560}
@@ -38,7 +38,7 @@ export default function Who() {
         {/* 右側の写真 */}
         <figure className={`${styles.card} ${styles.cardTR}`}>
           <Image
-            src="/who/who2.png"
+            src="/who/who2.webp"
             alt=""
             width={560}
             height={760}
@@ -49,7 +49,7 @@ export default function Who() {
         {/* 左下の横長写真 */}
         <figure className={`${styles.card} ${styles.cardBL}`}>
           <Image
-            src="/who/who3.png"
+            src="/who/who3.webp"
             alt=""
             width={1120}
             height={620}

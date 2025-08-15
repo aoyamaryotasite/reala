@@ -1,0 +1,9 @@
+.card{ display:grid; grid-template-columns:160px 1fr; gap:16px; padding:16px 0; border-bottom:1px solid #eee; }
+.thumb img{ display:block; width:100%; height:auto; border-radius:6px; }
+.body{ display:flex; flex-direction:column; gap:6px; }
+.title{ font-size:18px; margin:0; }
+.title a{ color:#1c2b33; text-decoration:none; }
+.title a:hover{ text-decoration:underline; text-underline-offset:3px; }
+.excerpt{ margin:0; color:#4b5a63; }
+.cat{ font-size:12px; color:#5f6d75; text-decoration:none; background:#f2f5f7; padding:4px 8px; border-radius:999px; width:max-content; }
+@media (max-width: 640px){ .card{ grid-template-columns:1fr; } }

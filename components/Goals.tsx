@@ -38,7 +38,7 @@ export default function Goals() {
 
         io.unobserve(sec); // 一度だけ発火
       },
-      { threshold: 0.35 }
+      { threshold: 0.1 }
     );
 
     io.observe(sec);
@@ -53,24 +53,21 @@ export default function Goals() {
         </h2>
 
         <p ref={leadRef} className={`${styles.lead} ${styles.slideUp}`}>
-          REALA Japanese Academy's lessons are tailored, one-on-one online Japanese lessons
-          customized to each student's specific goals and objectives. We value the "why" and "how"
-          behind language learning, focusing not just on memorization but on building a practical
-          understanding that you can actually use.
+       REALA Japanese Academy's lessons are tailored, one-on-one online Japanese lessons, customized to each student's specific goals and objectives. We value the "why" and "how" behind language learning, focusing not just on memorization but on building a practical understanding that you can actually use.
         </p>
 
         <div ref={cardsRef} className={styles.grid}>
           <figure className={styles.card}>
-            <Image src="/cards/card1.png" alt="" width={520} height={520} className={styles.img}/>
+            <Image src="/cards/4.webp" alt="" width={520} height={520} className={styles.img}/>
           </figure>
           <figure className={styles.card}>
-            <Image src="/cards/card2.png" alt="" width={520} height={520} className={styles.img}/>
+            <Image src="/cards/3.webp" alt="" width={520} height={520} className={styles.img}/>
           </figure>
           <figure className={styles.card}>
-            <Image src="/cards/card3.png" alt="" width={520} height={520} className={styles.img}/>
+            <Image src="/cards/2.webp" alt="" width={520} height={520} className={styles.img}/>
           </figure>
           <figure className={styles.card}>
-            <Image src="/cards/card4.png" alt="" width={520} height={520} className={styles.img}/>
+            <Image src="/cards/1.webp" alt="" width={520} height={520} className={styles.img}/>
           </figure>
         </div>
       </div>

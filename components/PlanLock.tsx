@@ -163,21 +163,19 @@ export default function PlanLock({
     const firstFigure = el.querySelector<HTMLElement>('[data-first="true"]');
     let ioFig: IntersectionObserver | null = null;
 
-    if (firstFigure) {
-      ioFig = new IntersectionObserver(([entry]) => {
-        const rect = firstFigure.getBoundingClientRect();
-        const bottomReached = rect.bottom <= window.innerHeight;
-        if (entry.intersectionRatio >= 0.98 || bottomReached) enableLock();
-        else disableLock();
-      }, { threshold: [0.98] });
-      ioFig.observe(firstFigure);
+if (firstFigure) {
+  ioFig = new IntersectionObserver(([entry]) => {
+    const rect = firstFigure.getBoundingClientRect();
+    // 下端が画面下から 20px 以内まで来たら
+    const bottomReached = rect.bottom <= window.innerHeight - 20;
+    if (entry.intersectionRatio >= 1 && bottomReached) {
+      enableLock();
     } else {
-      // フォールバック：セクション可視でロック
-      const io = new IntersectionObserver(([entry]) => {
-        entry.isIntersecting ? enableLock() : disableLock();
-      }, { threshold: 0.6 });
-      io.observe(el);
+      disableLock();
     }
+  }, { threshold: [1] }); // 完全に見えてから
+  ioFig.observe(firstFigure);
+}
 
     return () => {
       resetIO.disconnect();

@@ -1,6 +1,5 @@
 .section{
-  background:#fff;
-  padding: min(8vw, 72px) 24px;
+  padding: 8rem 0 5rem 0;
   border-left: 1px solid rgba(248,113,113,.35);   /* 左の細ライン（任意） */
   border-right:1px solid rgba(250,204,21,.35);    /* 右の細ライン（任意） */
 }
@@ -14,13 +13,13 @@
   font-weight: 800;
   letter-spacing: -.01em;
 line-height: 1.55;
-  font-size: clamp(2.2rem, 5.5vw, 5rem); /* 大きめ見出し */
+  font-size:5.5vw; /* 大きめ見出し */
   color: #0f172a;
   margin: 0 0 .75rem;
 }
 
 .lead{
-  max-width: 920px;
+font-size: 2vw;
   color: #334155;
   line-height: 1.75;
   font-size: clamp(.95rem, .4vw + .9rem, 1.125rem);
@@ -38,7 +37,7 @@ line-height: 1.55;
 .card {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 360ms ease, transform 360ms ease; 
 }
 /* 表示状態 */
 .card.show {
@@ -69,7 +68,7 @@ line-height: 1.55;
 
 /* ↓ JSで .start が付いたときにだけ露光アニメを走らせる */
 .start.revealLeft{
-  animation: revealX 1200ms cubic-bezier(.22,1,.36,1) forwards;
+  animation: revealX 800ms cubic-bezier(.22,1,.36,1) forwards;
 }
 @keyframes revealX{
   to{
@@ -82,7 +81,7 @@ line-height: 1.55;
 .slideUp{
   opacity: 0;
   transform: translateY(14px);
-  transition: opacity 520ms ease, transform 520ms ease;
+  transition: opacity 300ms ease, transform 520ms ease;
 }
 /* 見出しの animationend 後にJSから付く */
 .show{

@@ -1,6 +1,6 @@
 .section {
   position: relative;
-  padding: clamp(24px, 5vw, 72px) 0;
+  padding: 0;
 }
 
 .inner {
@@ -8,19 +8,44 @@
   margin: 0 auto;
 }
 
+/* ---- ふわっと表示用 (共通) ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 800ms ease,
+    transform 800ms ease;
+  will-change: opacity, transform;
+}
+
+.show {
+  opacity: 1;
+  transform: none;
+}
+
+/* 遅延（画像→テキストの順にふわっと） */
+.delayImage {
+  transition-delay: 80ms;
+}
+.delayText {
+  transition-delay: 200ms;
+}
+
 /* 背景画像 */
 .imageWrap {
   position: relative;
   width: 100%;
   padding-top: 40%; /* 高さ比率調整 */
+  background-color: #fff;
 }
-.imageWrap img{
-    position: absolute;
-    width: 71%;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    color: transparent;
+.imageWrap img {
+  position: absolute;
+  width: 71%;
+  top: 0;
+  right: 0;
+  height: 100%;
+  bottom: 0;
+  color: transparent;
 }
 
 .image {
@@ -31,9 +56,8 @@
 .textBox {
   position: absolute;
   top: 48%;
-  left:18%;
+  left: 3%;
   transform: translateY(-50%);
-  max-width: 50%; /* テキスト幅を制限 */
   padding: 1.5rem;
 }
 
@@ -59,5 +83,14 @@
     background: none;
     padding: 0;
     margin-top: 1rem;
+  }
+}
+
+/* 動きを控えたいユーザー配慮 */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: none;
+    opacity: 1;
+    transform: none;
   }
 }
