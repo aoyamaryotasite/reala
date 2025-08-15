@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -12,8 +12,14 @@ interface Params {
   slug: string;
 }
 
+type PageProps = {
+  params: Params;
+};
+
+// generateMetadata
 export async function generateMetadata(
-  { params }: { params: Params }
+  { params }: PageProps,
+  _parent?: ResolvingMetadata
 ): Promise<Metadata> {
   const post = await getColumnBySlug(params.slug);
   if (!post) return {};
@@ -41,11 +47,8 @@ export async function generateMetadata(
   };
 }
 
-// コンポーネント側の型は引数分解ではなく props 全体の型を指定
-export default async function ColumnDetail(
-  props: { params: Params }
-) {
-  const { params } = props;
+// ページコンポーネント
+export default async function ColumnDetail({ params }: PageProps) {
   const post = await getColumnBySlug(params.slug);
   if (!post) return notFound();
 
