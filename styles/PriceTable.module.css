@@ -64,6 +64,10 @@
   text-align: left;
   font-weight: 700;
 }
+.tableScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
 @media (max-width: 768px) {
   .headerRow,
@@ -92,12 +96,18 @@
   .row .cell:nth-child(1) { grid-area: label; }
   .row .cell:nth-child(2) { grid-area: priceJPY; }
   .row .cell:nth-child(3) { grid-area: priceUSD; }
-.tableScroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
+  .tableScroll {
+    display: block;
+    white-space: nowrap; /* 子要素を横並びにする */
+  }
+  .tableScroll > div {
+    display: inline-block;
+    vertical-align: top;
+  }
 
-.tableScroll > * {
-  min-width: 700px; /* 3列が収まる最低幅（調整可） */
+.body,.headerRow {
+  min-width: 600px; /* ← スマホ幅より大きく */
+      display: inline-block;
+    vertical-align: top;
 }
 }

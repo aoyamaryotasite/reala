@@ -36,7 +36,7 @@ function PriceTableBlock({ title, plans }: { title: string; plans: Plan[] }) {
       <h3 className={styles.subtitle}>{title}</h3>
 
       {/* scroll-hint ターゲット */}
-      <div className="tableScroll scroll-hint">
+      <div className="tableScroll">
         <div className={styles.headerRow} role="row">
           <div className={`${styles.headerCell} ${styles.leftRadius}`} role="columnheader">Plan Name</div>
           <div className={styles.headerCell} role="columnheader">Price (JPY)</div>
@@ -60,18 +60,18 @@ function PriceTableBlock({ title, plans }: { title: string; plans: Plan[] }) {
   );
 }
 
-export default function PriceTable() {
-  useEffect(() => {
-    if (window.innerWidth <= 768) {
-      // 描画後に実行
-      setTimeout(() => {
+    export default function PriceTable() {
+      useEffect(() => {
+        if (window.innerWidth <= 768) {
+          // 描画後に実行
+          setTimeout(() => {
         new ScrollHint(".tableScroll", {
-          suggestiveShadow: true,
-          remainingTime: 3000,
-          i18n: {
-            scrollable: "Scroll →"
-          }
-        });
+      suggestiveShadow: true,
+      remainingTime: 3000 as any, // ← 型エラー回避
+      i18n: {
+        scrollable: "Scroll →"
+      }
+    });
       }, 0);
     }
   }, []);
