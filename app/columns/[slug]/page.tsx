@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import type { PageProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,21 +7,21 @@ import { getColumnBySlug } from "../../../lib/microcms";
 import styles from "../page.module.css";
 import ColumnSidebar from "../../../components/ColumnSidebar";
 
-type Props = {
-  params: { slug: string } | Promise<{ slug: string }>;
-};
+// Next.js標準のPagePropsを継承してparams型を定義
+type Props = PageProps<{ slug: string }>;
 
 export const revalidate = 600;
 
 export async function generateMetadata(
-  { params }: Awaited<Props>
+  { params }: Props,
+  _parent?: ResolvingMetadata
 ): Promise<Metadata> {
-  const p = await params;
-  const post = await getColumnBySlug(p.slug);
+  const { slug } = await params;
+  const post = await getColumnBySlug(slug);
 
   if (!post) return {};
 
-  const url = `https://www.example.com/columns/${p.slug}`;
+  const url = `https://www.example.com/columns/${slug}`;
   const ogImg = post.eyecatch?.url ?? "/og/og-image.jpg";
 
   return {
@@ -43,9 +44,9 @@ export async function generateMetadata(
   };
 }
 
-export default async function ColumnDetail({ params }: Awaited<Props>) {
-  const p = await params;
-  const post = await getColumnBySlug(p.slug);
+export default async function ColumnDetail({ params }: Props) {
+  const { slug } = await params;
+  const post = await getColumnBySlug(slug);
   if (!post) return notFound();
 
   return (
