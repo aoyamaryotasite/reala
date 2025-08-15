@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, PageProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,11 +6,11 @@ import { getColumnBySlug } from "../../../lib/microcms";
 import styles from "../page.module.css";
 import ColumnSidebar from "../../../components/ColumnSidebar";
 
-type Props = {
+interface Props extends PageProps {
   params: {
     slug: string;
   };
-};
+}
 
 export const revalidate = 600;
 
