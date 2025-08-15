@@ -8,15 +8,15 @@ import ColumnSidebar from "../../../components/ColumnSidebar";
 
 export const revalidate = 600;
 
-// generateMetadata
 export async function generateMetadata(
-  { params }: { params: { slug: string } },
+  { params }: any,
   _parent?: ResolvingMetadata
 ): Promise<Metadata> {
-  const post = await getColumnBySlug(params.slug);
+  const slug: string = params.slug;
+  const post = await getColumnBySlug(slug);
   if (!post) return {};
 
-  const url = `https://www.example.com/columns/${params.slug}`;
+  const url = `https://www.example.com/columns/${slug}`;
   const ogImg = post.eyecatch?.url ?? "/og/og-image.jpg";
 
   return {
@@ -39,11 +39,9 @@ export async function generateMetadata(
   };
 }
 
-// ページコンポーネント
-export default async function ColumnDetail(
-  { params }: { params: { slug: string } }
-) {
-  const post = await getColumnBySlug(params.slug);
+export default async function ColumnDetail({ params }: any) {
+  const slug: string = params.slug;
+  const post = await getColumnBySlug(slug);
   if (!post) return notFound();
 
   return (
