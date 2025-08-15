@@ -1,4 +1,4 @@
-import type { Metadata, PageProps } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,20 +6,21 @@ import { getColumnBySlug } from "../../../lib/microcms";
 import styles from "../page.module.css";
 import ColumnSidebar from "../../../components/ColumnSidebar";
 
-interface Props extends PageProps {
-  params: {
-    slug: string;
-  };
-}
+type Props = {
+  params: { slug: string } | Promise<{ slug: string }>;
+};
 
 export const revalidate = 600;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await getColumnBySlug(params.slug);
+export async function generateMetadata(
+  { params }: Awaited<Props>
+): Promise<Metadata> {
+  const p = await params;
+  const post = await getColumnBySlug(p.slug);
 
   if (!post) return {};
 
-  const url = `https://www.example.com/columns/${params.slug}`;
+  const url = `https://www.example.com/columns/${p.slug}`;
   const ogImg = post.eyecatch?.url ?? "/og/og-image.jpg";
 
   return {
@@ -42,8 +43,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ColumnDetail({ params }: Props) {
-  const post = await getColumnBySlug(params.slug);
+export default async function ColumnDetail({ params }: Awaited<Props>) {
+  const p = await params;
+  const post = await getColumnBySlug(p.slug);
   if (!post) return notFound();
 
   return (
