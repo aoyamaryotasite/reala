@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, PageProps } from "next";
 import ColumnCard from "../../../../components/ColumnCard";
 import CategoryNav from "../../../../components/CategoryNav";
 import { getCategories, getColumns } from "../../../../lib/microcms";
 
-type Props = { params: { category: string }, searchParams?: { page?: string } };
+type Props = PageProps<{ category: string }, { page?: string }>;
 
 export const revalidate = 600;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const url = `https://www.example.com/columns/category/${params.category}`;
+  const { category } = await params;
+  const url = `https://www.example.com/columns/category/${category}`;
   return {
-    title: `Category: ${params.category}`,
+    title: `Category: ${category}`,
     alternates: { canonical: url },
   };
 }
@@ -18,17 +19,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const PER_PAGE = 10;
 
 export default async function CategoryPage({ params, searchParams }: Props) {
+  const { category } = await params;
   const page = Number(searchParams?.page ?? "1");
   const offset = (page - 1) * PER_PAGE;
 
   // slug でも id でもヒットさせたいので filters を OR で
-  const catIdOrSlug = params.category;
+  const catIdOrSlug = category;
   const { contents, totalCount } = await getColumns({
     limit: PER_PAGE,
     offset,
     orders: "-publishedAt",
     filters: `category[equals]${catIdOrSlug} || category[equals]${catIdOrSlug}`,
-    // ↑ slug参照を使っていない場合もあるため、「idと同値」として扱う想定
   });
 
   // 本当はカテゴリ名を出したいので、取得して解決
@@ -40,7 +41,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   return (
     <main style={{ width: "min(900px,92vw)", margin: "64px auto" }}>
       <h1 style={{ fontSize: "28px", marginBottom: 6 }}>
-        Category: {current?.name ?? params.category}
+        Category: {current?.name ?? category}
       </h1>
       <CategoryNav current={catIdOrSlug} />
 
