@@ -8,17 +8,9 @@ import ColumnSidebar from "../../../components/ColumnSidebar";
 
 export const revalidate = 600;
 
-interface Params {
-  slug: string;
-}
-
-type PageProps = {
-  params: Params;
-};
-
 // generateMetadata
 export async function generateMetadata(
-  { params }: PageProps,
+  { params }: { params: { slug: string } },
   _parent?: ResolvingMetadata
 ): Promise<Metadata> {
   const post = await getColumnBySlug(params.slug);
@@ -48,7 +40,9 @@ export async function generateMetadata(
 }
 
 // ページコンポーネント
-export default async function ColumnDetail({ params }: PageProps) {
+export default async function ColumnDetail(
+  { params }: { params: { slug: string } }
+) {
   const post = await getColumnBySlug(params.slug);
   if (!post) return notFound();
 
