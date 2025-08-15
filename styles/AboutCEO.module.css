@@ -20,7 +20,7 @@
   top:8%;
   width:72%;
   height:100%;
-  background:var(--panel);
+  background:#285f65;
   border-radius:6px;
   z-index:0;
 }
@@ -29,6 +29,7 @@
 .textPane{
   position:relative;
   z-index:1; /* 背景ブロックより前面 */
+  color: #fff;
   padding: clamp(12px, 1.5vw, 18px) clamp(8px, 1vw, 12px);
 }
 
@@ -38,7 +39,7 @@
   font-weight:600;
   letter-spacing:.02em;
   color:var(--ink);
-  margin:0 0 18px;
+  margin:-12px 0 20px;
   font-family: "Georgia", "Times New Roman", serif; /* 優雅な見出し */
 }
 
@@ -47,7 +48,7 @@
 }
 
 .paragraph{
-  color:#23323a;
+  color:#fff;
   line-height:1.8;
   margin:0 0 14px;
   font-weight:600;

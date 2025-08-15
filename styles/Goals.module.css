@@ -105,4 +105,10 @@ font-size: 2vw;
 }
 @media (max-width: 520px){
   .grid{ grid-template-columns: 1fr; }
+  .section {padding: 3rem 016px 5rem;}
+  .title{
+    font-size: 3rem;
+    line-height: 1.18;
+  }
+ .grid{ grid-template-columns: repeat(2, 1fr); }
 }

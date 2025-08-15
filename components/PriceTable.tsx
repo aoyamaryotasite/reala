@@ -1,4 +1,8 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
+import ScrollHint from "scroll-hint";
+import "scroll-hint/css/scroll-hint.css"; // CSSを必ず読み込む
 import styles from "../styles/PriceTable.module.css";
 
 type Plan = {
@@ -26,39 +30,52 @@ const plansWithFee: Plan[] = [
   { name: "Standard Plan", priceJPY: "¥33,409", priceUSD: "$227", isAlt: true },
 ];
 
-function PriceTableBlock({
-  title,
-  plans,
-}: {
-  title: string;
-  plans: Plan[];
-}) {
+function PriceTableBlock({ title, plans }: { title: string; plans: Plan[] }) {
   return (
     <div className={styles.tableCard}>
       <h3 className={styles.subtitle}>{title}</h3>
-      <div className={styles.headerRow} role="row">
-        <div className={`${styles.headerCell} ${styles.leftRadius}`} role="columnheader">Plan Name</div>
-        <div className={styles.headerCell} role="columnheader">Price (JPY)</div>
-        <div className={`${styles.headerCell} ${styles.rightRadius}`} role="columnheader">Price (USD)</div>
-      </div>
-      <div className={styles.body} role="rowgroup">
-        {plans.map((p, i) => (
-          <div
-            key={i}
-            className={`${styles.row} ${p.isAlt ? styles.rowAlt : ""}`}
-            role="row"
-          >
-            <div className={`${styles.cell} ${styles.cellLabel}`} role="cell">{p.name}</div>
-            <div className={styles.cell} role="cell">{p.priceJPY}</div>
-            <div className={styles.cell} role="cell">{p.priceUSD}</div>
-          </div>
-        ))}
+
+      {/* scroll-hint ターゲット */}
+      <div className="tableScroll scroll-hint">
+        <div className={styles.headerRow} role="row">
+          <div className={`${styles.headerCell} ${styles.leftRadius}`} role="columnheader">Plan Name</div>
+          <div className={styles.headerCell} role="columnheader">Price (JPY)</div>
+          <div className={`${styles.headerCell} ${styles.rightRadius}`} role="columnheader">Price (USD)</div>
+        </div>
+        <div className={styles.body} role="rowgroup">
+          {plans.map((p, i) => (
+            <div
+              key={i}
+              className={`${styles.row} ${p.isAlt ? styles.rowAlt : ""}`}
+              role="row"
+            >
+              <div className={`${styles.cell} ${styles.cellLabel}`} role="cell">{p.name}</div>
+              <div className={styles.cell} role="cell">{p.priceJPY}</div>
+              <div className={styles.cell} role="cell">{p.priceUSD}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
 export default function PriceTable() {
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      // 描画後に実行
+      setTimeout(() => {
+        new ScrollHint(".tableScroll", {
+          suggestiveShadow: true,
+          remainingTime: 3000,
+          i18n: {
+            scrollable: "Scroll →"
+          }
+        });
+      }, 0);
+    }
+  }, []);
+
   return (
     <section className={styles.wrap} aria-labelledby="price-heading">
       <h2 id="price-heading" className={styles.title}>PRICE</h2>

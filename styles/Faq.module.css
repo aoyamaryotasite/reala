@@ -30,7 +30,8 @@
 
 
 .item{
-  border-bottom:1px solid var(--rule);
+
+  border-bottom:1px solid #fff;
 }
 
 .question{

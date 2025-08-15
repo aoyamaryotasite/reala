@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import "scroll-hint/css/scroll-hint.css";
+
 
 import PageLoader from "../components/PageLoader";
 
@@ -169,53 +171,57 @@ const faqJsonLd = {
 
 export default function Page() {
   return (
- <PageLoader minDurationMs={1800} slideMs={700}>
-    <main>
-      <Hero />
-      {/* <PenLine /> */}
-      <Goals />
-      <Tutor />
-      <Who />
-      <PlanLock
-        slides={[
-          {
-            img: "/plans/textbook.png",
-            title: "Textbook Plan",
-            sub: "Solid Foundation",
-            body: "Using popular textbooks like Minna no Nihongo and Genki, you will methodically learn grammar, vocabulary, and expressions. The first lesson will be dedicated to clarifying your goals and creating a personalized study plan."
-          },
-          {
-            img: "/plans/free-talk.png",
-            title: "Free Talk Plan",
-            sub: "Improve Conversational Fluency",
-            body: "Discuss any topic you like, such as hobbies, travel, culture, or news. This plan is ideal for practicing natural Japanese expressions and reactions. We also offer conversation practice in Kansai-ben."
-          },
-          {
-            img: "/plans/jlpt.png",
-            title: "JLPT Prep Plan",
-            sub: "Beyond Passing the Test",
-            body: "Using resources like the Shin Kanzen Master series, we will focus on grammar, vocabulary, reading and listening. If you feel anxious about preparing for the JLPT alone, we will work together to achieve your target score."
-          }
-        ]}
-        nextAnchorId="after-plans"
-      />
+    <PageLoader minDurationMs={1800} slideMs={700}>
+      <main>
+        <Hero />
+        {/* <PenLine /> */}
+        <Goals />
+        <Tutor />
+        <Who />
+        <PlanLock
+          slides={[
+            {
+              img: "/plans/textbook.webp",
+              title: "Textbook Plan",
+              sub: "Solid Foundation",
+              body: "Using popular textbooks like Minna no Nihongo and Genki, you will methodically learn grammar, vocabulary, and expressions. The first lesson will be dedicated to clarifying your goals and creating a personalized study plan."
+            },
+            {
+              img: "/plans/free-talk.webp",
+              title: "Free Talk Plan",
+              sub: "Improve Conversational Fluency",
+              body: "Discuss any topic you like, such as hobbies, travel, culture, or news. This plan is ideal for practicing natural Japanese expressions and reactions. We also offer conversation practice in Kansai-ben."
+            },
+            {
+              img: "/plans/jlpt.webp",
+              title: "JLPT Prep Plan",
+              sub: "Beyond Passing the Test",
+              body: "Using resources like the Shin Kanzen Master series, we will focus on grammar, vocabulary, reading and listening. If you feel anxious about preparing for the JLPT alone, we will work together to achieve your target score."
+            }
+          ]}
+          nextAnchorId="after-plans"
+  triggerOffsetPx={18}  // 手前で発火を狙うなら小さく
+  enterRatio={0.70}     // 早めにロック
+  exitRatio={0.50}      // 解除はゆるめに
+  rootMarginPx={80}     
+        />
 
-      <div id="after-plans" style={{ height: "1px" }} />
-      <PriceTable />
-            <AboutCEO
-        imageSrc="/ceo.png"  // 実際の画像パスに変更してください
-        imageAlt="CEO"
-        points={[
-          "Over 10 years of experience in English education at high schools and personalized tutoring at cram schools.",
-          "CELTA certified, allowing me to provide instruction based on established language education theory and practice.",
-          "Deep understanding of the structural differences between Japanese and English, enabling me to provide clear and logical explanations.",
-          "Full support in English (lesson bookings, grammar explanations, learning consultations, etc.).",
-          "Fluent in Kansai-ben, providing native-level guidance on natural expressions."
-        ]}
-      />
-       <Faq />
-      <Contact />
-    </main>
+        <div id="after-plans" style={{ height: "1px" }} />
+        <PriceTable />
+        <AboutCEO
+          imageSrc="/ceo.png"  // 実際の画像パスに変更してください
+          imageAlt="CEO"
+          points={[
+            "Over 10 years of experience in English education at high schools and personalized tutoring at cram schools.",
+            "CELTA certified, allowing me to provide instruction based on established language education theory and practice.",
+            "Deep understanding of the structural differences between Japanese and English, enabling me to provide clear and logical explanations.",
+            "Full support in English (lesson bookings, grammar explanations, learning consultations, etc.).",
+            "Fluent in Kansai-ben, providing native-level guidance on natural expressions."
+          ]}
+        />
+        <Faq />
+        <Contact />
+      </main>
     </PageLoader>
   );
 }

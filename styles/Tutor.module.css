@@ -12,9 +12,7 @@
 .reveal {
   opacity: 0;
   transform: translateY(16px);
-  transition:
-    opacity 800ms ease,
-    transform 800ms ease;
+  transition: opacity 800ms ease, transform 800ms ease;
   will-change: opacity, transform;
 }
 
@@ -82,7 +80,11 @@
     max-width: 100%;
     background: none;
     padding: 0;
-    margin-top: 1rem;
+    margin-top: -2.5rem;
+  }
+  .title,
+  .textBox p {
+    padding: 0 10px;
   }
 }
 

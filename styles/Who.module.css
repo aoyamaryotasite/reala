@@ -4,7 +4,7 @@ padding-top: 5vw;
 
 .wrap {
   position: relative;
-  margin: 0 auto;
+  margin: 0 auto 11rem auto;
   min-height: 750px; /* キャンバス確保（数値は好みで） */
 }
 
@@ -36,13 +36,13 @@ padding-top: 5vw;
   line-height: 1.1;
   font-size: clamp(1.6rem, 3.2vw, 2.4rem);
   margin: 0 0 0.6rem;
-  color: #111827;
+    color: #bfbfbf;
 }
 
 .list {
   margin: 0.5rem 0 0;
   padding-left: 8.1rem;
-  color: #1f2937;
+  color: #bfbfbf;
   font-size: clamp(0.98rem, 0.35vw + 0.9rem, 1.125rem);
   line-height: 1.8;
   font-weight: bold;
@@ -57,6 +57,35 @@ padding-top: 5vw;
   z-index: 2;
   margin: 0;
 }
+
+.backdrop,
+.textBox,
+.card {
+  opacity: 0;                  /* 最初は透明 */
+  transform: translateY(30px); /* 少し下げる */
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.in {
+  opacity: 1;                  /* 表示 */
+  transform: translateY(0);    /* 元の位置に戻す */
+}
+.backdrop.in {
+  transition-delay: 0s;
+}
+.textBox.in {
+  transition-delay: 0.3s;
+}
+.card:nth-of-type(1).in {
+  transition-delay: 0.6s;
+}
+.card:nth-of-type(2).in {
+  transition-delay: 0.9s;
+}
+.card:nth-of-type(3).in {
+  transition-delay: 1.2s;
+}
+
 .img {
   display: block;
   width: 100%;
@@ -79,7 +108,7 @@ padding-top: 5vw;
 }
 .cardBL {
   width: 38%;
-  bottom: 1%;
+    bottom: -10vw;
   left: 12%;
 }
 
@@ -92,27 +121,40 @@ padding-top: 5vw;
   .backdrop {
     position: static;
     width: auto;
-    height: 180px;
+    height: 100vw;
     margin: 0 auto 16px;
+    background: transparent;
+  }
+  .title{
+    color: #222222;
+  }
+  .list{
+    padding-left: 1.1rem;
+      color: #222222;
   }
   .textBox {
-    position: static;
+    position: absolute;
     width: auto;
+        top: 49rem;
   }
   .card,
   .cardTL,
   .cardTR,
   .cardBL {
-    position: static;
+    position: absolute;
     width: 100%;
     margin-top: 18px;
   }
+  .cardBL{
+        bottom: -95vw;
+  }
+  .cardTR{
+    width: 50%;
+    top: 57%;
+    right: 47%;
+  }
+    .cardTL{
+      top: -1%;
+    }
 }
 
-/* モーションを足したいとき（任意） */
-.card,
-.textBox {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}

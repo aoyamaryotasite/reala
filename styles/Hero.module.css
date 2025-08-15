@@ -168,6 +168,14 @@
 
 @media (max-width: 768px) {
   .slide {
-    --cardW: 85vw;
+    --cardW: 100vw;
+    height: 80%;
   }
+  .title{
+    font-size: 2.5rem;
+  }
+  .headings p {
+    line-height: 1.5;
+    margin-top: 1rem;
+}
 }

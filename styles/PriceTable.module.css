@@ -46,11 +46,11 @@
 }
 
 .rowAlt .cellLabel {
-  background: var(--alt);
+  background:#fff;
 }
 
 .cell {
-  background: var(--brand-100);
+  background: #fff;
   padding: 18px 20px;
   border-radius: 14px;
   text-align: center;
@@ -59,7 +59,7 @@
 }
 
 .cellLabel {
-  background: #e9ecef;
+  background: #fff;
   color: #5a6b74;
   text-align: left;
   font-weight: 700;
@@ -92,4 +92,12 @@
   .row .cell:nth-child(1) { grid-area: label; }
   .row .cell:nth-child(2) { grid-area: priceJPY; }
   .row .cell:nth-child(3) { grid-area: priceUSD; }
+.tableScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tableScroll > * {
+  min-width: 700px; /* 3列が収まる最低幅（調整可） */
+}
 }
