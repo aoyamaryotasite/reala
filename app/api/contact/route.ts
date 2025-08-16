@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     const to = need('CONTACT_TO');
     const from = process.env.CONTACT_FROM?.trim() || 'Your Site <onboarding@resend.dev>';
 
-    const subject = `New inquiry from ${b.fullName}`;
+    const subject = `WEBサイトから新しい問い合わせが ${b.fullName}さんからありました`;
 
     // メール本文にすべての項目を整形して入れる
     const text = [
@@ -69,12 +69,32 @@ export async function POST(req: Request) {
      console.log('Resend admin mail response:', r1);
 
     // 自動返信
-    const r2 = await resend.emails.send({
-      from,
-      to: b.email,
-      subject: 'Thanks for your inquiry',
-      text: `Hi ${b.fullName},\n\nThanks for reaching out!\n\nWe received the following details:\n\n${text}`,
-    });
+  const r2 = await resend.emails.send({
+  from,
+  to: b.email,
+  subject: 'Thank you for your trial lesson inquiry',
+  text: `Hi ${b.fullName},
+
+Thank you for your interest in our trial lesson!
+We have received your inquiry with the following details:
+
+- Name: ${b.fullName}
+- Email: ${b.email}
+- Country/Timezone: ${b.country}
+- Japanese Level: ${b.japaneseLevel}
+- Learning Purpose: ${b.learningPurpose}
+- Preferred Date & Time (1st): ${b.preferredDateTime1}
+- Preferred Date & Time (2nd): ${b.preferredDateTime2 || '-'}
+- Preferred Date & Time (3rd): ${b.preferredDateTime3 || '-'}
+- Learning History: ${b.learningHistory || '-'}
+- Other Message: ${b.otherMessage || '-'}
+
+We will contact you shortly to confirm the schedule.
+
+Best regards,
+Reala Academy Team
+`,
+});
 
     console.log('Resend auto-reply response:', r2);
 
