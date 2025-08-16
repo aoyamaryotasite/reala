@@ -91,6 +91,7 @@ export default function Contact() {
   });
 
   return (
+     <>
     <HeroHeader/>
     <section className={styles.wrap} aria-labelledby="contact-heading">
       <h2 id="contact-heading" className={styles.title}>Trial Lesson Application Form</h2>
@@ -237,5 +238,6 @@ export default function Contact() {
       </form>
     </section>
     <Footer/>
+    </>
   );
 }

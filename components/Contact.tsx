@@ -15,7 +15,7 @@ type FormState = {
   otherMessage: string;
 };
 
-export default function Contact() {
+export default function Contact() { 
   const [form, setForm] = useState<FormState>({
     fullName: '',
     email: '',

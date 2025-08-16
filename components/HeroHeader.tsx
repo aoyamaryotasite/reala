@@ -9,13 +9,15 @@ export default function HeroHeader() {
     <div className={styles.topbar}>
       <div className={styles.inner}>
         <p className={styles.brand}>
-          <Image
-            src="/logo.webp?ver=0816"
-            alt="REALA Logo"
-            width={120}
-            height={40}
-            priority
-          />
+          <Link href="/">
+            <Image
+              src="/logo.webp?ver=0816"
+              alt="REALA Logo"
+              width={120}
+              height={40}
+              priority
+            />
+          </Link>
         </p>
 
         <Link href="/signup" className={styles.applyBtn}>
