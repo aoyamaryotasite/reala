@@ -7,7 +7,7 @@ import HeroHeader from "../../components/HeroHeader";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import enGB from "date-fns/locale/en-GB";
+import { enGB } from "date-fns/locale/en-GB"; 
 
 type FormState = {
   fullName: string;
