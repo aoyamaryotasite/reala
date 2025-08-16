@@ -191,7 +191,7 @@ export default function Contact() {
                       (p[`preferredDateTime${n}`].split(" ")[1] || ""),
                   }))
                 }
-                locale={enGB}          // ← 英語カレンダー強制
+                locale={enGB}         
                 dateFormat="yyyy-MM-dd" // ← 表示フォーマットも制御
                 className={styles.input}
                 placeholderText="Select date"
