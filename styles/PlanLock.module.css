@@ -80,6 +80,7 @@
   font-size: clamp(1.6rem, 1.2rem + 1.8vw, 2.3rem);
   line-height: 1.25;
   margin: 0 0 0.45rem;
+  color:#000;
 }
 .sub {
   font: inherit;
