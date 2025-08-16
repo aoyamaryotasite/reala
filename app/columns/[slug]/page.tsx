@@ -1,5 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import type { PageProps } from "next";
+// import type { PageProps } from "next"; // ← 削除
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -11,11 +11,14 @@ import HeroHeader from "../../../components/HeroHeader";
 
 export const revalidate = 600;
 
+// Promise で来る params の型を自前定義
+type ParamsPromise<T extends Record<string, string>> = Promise<T>;
+
 export async function generateMetadata(
-  { params }: PageProps<{ slug: string }>,
+  { params }: { params: ParamsPromise<{ slug: string }> },
   _parent?: ResolvingMetadata
 ): Promise<Metadata> {
-  const { slug } = await params; // ← await が必要
+  const { slug } = await params; // ← await
   const post = await getColumnBySlug(slug);
   if (!post) return {};
 
@@ -43,9 +46,9 @@ export async function generateMetadata(
 }
 
 export default async function ColumnDetail(
-  { params }: PageProps<{ slug: string }>
+  { params }: { params: ParamsPromise<{ slug: string }> }
 ) {
-  const { slug } = await params; // ← await が必要
+  const { slug } = await params; // ← await
   const post = await getColumnBySlug(slug);
   if (!post) notFound();
 
@@ -68,7 +71,6 @@ export default async function ColumnDetail(
 
           <h1 style={{ fontSize: 32, margin: "6px 0 12px" }}>{post.title}</h1>
 
-          {/* 投稿日・更新日・カテゴリー */}
           <p style={{ fontSize: 14, color: "#666", marginBottom: 12 }}>
             Published: {new Date(post.publishedAt).toLocaleDateString("en-US", {
               year: "numeric",

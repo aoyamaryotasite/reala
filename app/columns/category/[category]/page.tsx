@@ -1,5 +1,5 @@
 // app/columns/category/[category]/page.tsx
-import type { PageProps } from "next";
+// ★ PageProps の import は削除
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../page.module.css";
@@ -10,11 +10,19 @@ import { getColumns } from "../../../../lib/microcms";
 
 export const revalidate = 300;
 
-export default async function CategoryPage(
-  { params, searchParams }: PageProps<{ category: string }>
-) {
-  const { category } = await params;          // ← 必須
-  const sp = await searchParams;              // ← 必須
+// Promise で受け取る引数の型を自前定義
+type ParamsPromise<T extends Record<string, string>> = Promise<T>;
+type SearchParamsPromise<T extends Record<string, string | undefined>> = Promise<T>;
+
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: ParamsPromise<{ category: string }>;
+  searchParams: SearchParamsPromise<{ page?: string; q?: string }>;
+}) {
+  const { category } = await params;       // ← 必須（Next 15）
+  const sp = await searchParams;           // ← 必須（Next 15）
 
   const PER_PAGE = 10;
   const pageNum = Number(sp?.page ?? "1");
@@ -27,7 +35,7 @@ export default async function CategoryPage(
     offset,
     orders: "-publishedAt",
     fields: "id,title,slug,excerpt,eyecatch,category,publishedAt",
-    // microCMS 例: カテゴリーが slug の場合
+    // category が slug の場合の例。IDなら equals を ID に変更してください。
     filters: `category[equals]${category}`,
     ...(q ? { q } : {}),
   });

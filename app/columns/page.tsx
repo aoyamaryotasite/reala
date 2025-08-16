@@ -1,3 +1,4 @@
+// app/columns/page.tsx
 import Link from "next/link";
 import Image from "next/image";
 import ColumnSidebar from "../../components/ColumnSidebar";
@@ -5,15 +6,18 @@ import styles from "./page.module.css";
 import { getColumns } from "../../lib/microcms";
 import Footer from "../../components/Footer";
 import HeroHeader from "../../components/HeroHeader";
-import type { PageProps } from "next";
 
 export const revalidate = 300;
 
-export default async function ColumnsPage(
-  { searchParams }: PageProps<{ page?: string; q?: string }>
-) {
-  // Next.js 15: searchParams は Promise
-  const sp = await searchParams;
+// Promise で受け取る searchParams の型を自前定義
+type SearchParamsPromise<T extends Record<string, string | undefined>> = Promise<T>;
+
+export default async function ColumnsPage({
+  searchParams,
+}: {
+  searchParams: SearchParamsPromise<{ page?: string; q?: string }>;
+}) {
+  const sp = await searchParams; // ← Next 15 では await が必要
 
   const pageNum = Number(sp?.page ?? "1");
   const page = Number.isFinite(pageNum) && pageNum > 0 ? pageNum : 1;
