@@ -15,6 +15,8 @@ import Contact from "../components/Contact";
 import PriceTable from "../components/PriceTable";
 import AboutCEO from "../components/AboutCEO";
 import Faq from "../components/Faq";
+import Footer from "../components/Footer";
+
 
 
 export const metadata: Metadata = {
@@ -222,6 +224,7 @@ export default function Page() {
         />
         <Faq />
         <Contact />
+         <Footer />
       </main>
     </PageLoader>
   );

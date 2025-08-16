@@ -1,5 +1,4 @@
-console.log("RESEND_API_KEY:", process.env.RESEND_API_KEY);
-console.log("CONTACT_TO:", process.env.CONTACT_TO);
+
 
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
@@ -13,6 +12,8 @@ function need(name: string) {
 }
 
 export async function POST(req: Request) {
+    console.log("RESEND_API_KEY:", process.env.RESEND_API_KEY);
+  console.log("CONTACT_TO:", process.env.CONTACT_TO);
   try {
     const b = await req.json().catch(() => ({}));
 
