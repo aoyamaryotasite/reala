@@ -75,7 +75,7 @@ const END_VH   = 0.1;  // 画面上の10%に来るまで広げる// セクショ
           className={`${styles.imageWrap} ${styles.reveal} ${isVisible ? styles.show : ""} ${styles.delayImage}`}
         >
           <Image
-            src="/tutor/tutor.webp"
+            src="/tutor/tutor2.webp"
             alt="Personal Japanese Tutor"
             width={500}
             height={700}
