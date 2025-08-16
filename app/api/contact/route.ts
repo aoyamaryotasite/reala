@@ -66,6 +66,8 @@ export async function POST(req: Request) {
       text,
     });
 
+     console.log('Resend admin mail response:', r1);
+
     // 自動返信
     const r2 = await resend.emails.send({
       from,
@@ -73,6 +75,8 @@ export async function POST(req: Request) {
       subject: 'Thanks for your inquiry',
       text: `Hi ${b.fullName},\n\nThanks for reaching out!\n\nWe received the following details:\n\n${text}`,
     });
+
+    console.log('Resend auto-reply response:', r2);
 
     return NextResponse.json({ ok: true, r1, r2 }, { status: 200 });
   } catch (err: any) {
