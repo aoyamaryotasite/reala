@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import styles from '../../styles/contact.module.css';
+import Footer from "../../components/Footer";
+import HeroHeader from "../../components/HeroHeader";
 
 type FormState = {
   fullName: string;
@@ -89,6 +91,7 @@ export default function Contact() {
   });
 
   return (
+    <HeroHeader/>
     <section className={styles.wrap} aria-labelledby="contact-heading">
       <h2 id="contact-heading" className={styles.title}>Trial Lesson Application Form</h2>
 
@@ -233,5 +236,6 @@ export default function Contact() {
         {notice && <p className={styles.notice}>{notice}</p>}
       </form>
     </section>
+    <Footer/>
   );
 }
