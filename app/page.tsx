@@ -202,14 +202,8 @@ export default function Page() {
               body: "Using resources like the Shin Kanzen Master series, we will focus on grammar, vocabulary, reading and listening. If you feel anxious about preparing for the JLPT alone, we will work together to achieve your target score."
             }
           ]}
-          nextAnchorId="after-plans"
-  triggerOffsetPx={18}  // 手前で発火を狙うなら小さく
-  enterRatio={0.70}     // 早めにロック
-  exitRatio={0.50}      // 解除はゆるめに
-  rootMarginPx={80}     
-        />
 
-        <div id="after-plans" style={{ height: "1px" }} />
+        />
         <PriceTable />
         <AboutCEO
           imageSrc="/ceo.png"  // 実際の画像パスに変更してください

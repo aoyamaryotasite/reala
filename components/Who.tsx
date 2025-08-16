@@ -26,16 +26,50 @@ export default function Who() {
           }
         });
       },
-      { threshold: 0.3 } // セクションの50%が見えたら発動
+      { threshold: 0.3 } // セクションの30%が見えたら発動
     );
 
     observer.observe(section);
 
-    return () => observer.disconnect();
+    // ===== スクロール時ズーム処理 =====
+    const handleScroll = () => {
+      const imgs = document.querySelectorAll(`.${styles.img}`);
+      imgs.forEach((img) => {
+        const rect = img.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+
+        // 画像が画面中央に近いほど ratio が 1 に近づく
+        const visibleRatio = Math.max(
+          0,
+          Math.min(
+            1,
+            1 -
+              Math.abs(rect.top + rect.height / 2 - windowHeight / 2) /
+                (windowHeight / 2)
+          )
+        );
+
+        // スケールを 1 ~ 1.1 の範囲で調整
+        const scale = 1 + visibleRatio * 0.1;
+        img.style.transform = `scale(${scale})`;
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // 初期実行
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
-    <section className={styles.section} aria-labelledby="whoHeading" ref={sectionRef}>
+    <section
+      className={styles.section}
+      aria-labelledby="whoHeading"
+      ref={sectionRef}
+    >
       <div className={styles.wrap}>
         <div className={styles.backdrop} aria-hidden />
         <div className={styles.textBox}>
@@ -51,15 +85,34 @@ export default function Who() {
         </div>
 
         <figure className={`${styles.card} ${styles.cardTL}`}>
-          <Image src="/who/who1.webp" alt="" width={820} height={560} className={styles.img} priority />
+          <Image
+            src="/who/who1.webp"
+            alt=""
+            width={820}
+            height={560}
+            className={styles.img}
+            priority
+          />
         </figure>
 
         <figure className={`${styles.card} ${styles.cardTR}`}>
-          <Image src="/who/who2.webp" alt="" width={560} height={760} className={styles.img} />
+          <Image
+            src="/who/who2.webp"
+            alt=""
+            width={560}
+            height={760}
+            className={styles.img}
+          />
         </figure>
 
         <figure className={`${styles.card} ${styles.cardBL}`}>
-          <Image src="/who/who3.webp" alt="" width={1120} height={620} className={styles.img} />
+          <Image
+            src="/who/who3.webp"
+            alt=""
+            width={1120}
+            height={620}
+            className={styles.img}
+          />
         </figure>
       </div>
     </section>

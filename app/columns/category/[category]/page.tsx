@@ -12,7 +12,7 @@ export const revalidate = 600;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = params;
-  const url = `https://www.example.com/columns/category/${category}`;
+  const url = `http://reala-academy.com/columns/category/${category}`;
   return {
     title: `Category: ${category}`,
     alternates: { canonical: url },

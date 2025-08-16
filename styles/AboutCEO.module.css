@@ -1,90 +1,123 @@
-
-.wrap{
-  width:min(1220px,92vw);
-  margin:80px auto 100px;
+.wrap {
+  width: min(1220px, 92vw);
+  margin: 80px auto 100px;
 }
 
-.inner{
-  position:relative;
-  display:grid;
+/* --------- 追加: アニメ基礎（初期はぼかし＆薄く） ---------- */
+.reveal {
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(10px);
+  transition:
+    opacity 700ms ease,
+    filter 900ms ease,
+    transform 700ms ease;
+  will-change: opacity, filter, transform;
+}
+.isIn .reveal {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
+/* 動きを避けたいユーザーのための配慮 */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* --------- 追加ここまで ---------- */
+
+.inner {
+  position: relative;
+  display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  gap:clamp(20px,3vw,40px);
-  align-items:center;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: center;
 }
 
 /* 背景の水色ブロック（テキスト背面→写真の下に少し伸びる） */
-.inner::before{
-  content:"";
-  position:absolute;
-  left:-2%;
-  top:8%;
-  width:72%;
-  height:100%;
-  background:#285f65;
-  border-radius:6px;
-  z-index:0;
+.inner::before {
+  content: "";
+  position: absolute;
+  left: -2%;
+  top: 8%;
+  width: 72%;
+  height: 100%;
+  background: #285f65;
+  border-radius: 6px;
+  z-index: 0;
 }
 
 /* テキスト側 */
-.textPane{
-  position:relative;
-  z-index:1; /* 背景ブロックより前面 */
+.textPane {
+  position: relative;
+  z-index: 1; /* 背景ブロックより前面 */
   color: #fff;
   padding: clamp(12px, 1.5vw, 18px) clamp(8px, 1vw, 12px);
+  top: 11%;
 }
 
-.title{
-  font-size:clamp(30px,5vw,56px);
-  line-height:1.1;
-  font-weight:600;
-  letter-spacing:.02em;
-  color:var(--ink);
-  margin:-12px 0 20px;
+.title {
+  font-size: clamp(30px, 5vw, 56px);
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin: -12px 0 20px;
 }
 
-.copy{
-  max-width:60ch;
+.copy {
+  max-width: 60ch;
 }
 
-.paragraph{
-  color:#fff;
-  line-height:1.8;
-  margin:0 0 14px;
-  font-weight:600;
+.paragraph {
+  color: #fff;
+  line-height: 1.8;
+  margin: 0 0 14px;
+  font-weight: 600;
 }
 
 /* 写真側 */
-.photoPane{
-  position:relative;
-  z-index:1;
-  justify-self:end;
+.photoPane {
+  position: relative;
+  z-index: 1;
+  justify-self: end;
 }
 
-.photo{
-  display:block;
-  width:min(420px, 40vw);
-  height:auto;
-  object-fit:cover;
-  border-radius:2px;
-  box-shadow:0 18px 34px rgba(0,0,0,.12);
+.photo {
+  display: block;
+  width: min(420px, 40vw);
+  height: auto;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.12);
 }
 
 /* スマホ対応 */
-@media (max-width: 860px){
-  .inner{
-    grid-template-columns:1fr;
+@media (max-width: 860px) {
+  .inner {
+    grid-template-columns: 1fr;
   }
-  .inner::before{
-    left:-4%;
-    top:6%;
-    width:92%;
-    height:70%;
+  .inner::before {
+    width: 103%;
+    height: 89%;
+    top: 6%;
+    left: -4%;
   }
-  .photoPane{
-    justify-self:center;
-    margin-top:16px;
+  .photoPane {
+    justify-self: center;
+    margin-top: 16px;
+    top: -33rem;
+    right: -9px;
   }
-  .photo{
-    width:min(520px, 92vw);
+  .photo {
+    width: min(520px, 92vw);
   }
+  .textPane {
+  top: 79%;
+}
 }

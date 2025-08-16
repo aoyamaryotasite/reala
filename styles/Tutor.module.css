@@ -32,9 +32,12 @@
 /* 背景画像 */
 .imageWrap {
   position: relative;
-  width: 100%;
-  padding-top: 40%; /* 高さ比率調整 */
+  width: var(--imgW, 90%);  /* ここをJSから 80% → 100% に更新 */
+  max-width: 100%;
+  padding-top: 40%;    
+  margin: 0 auto;     /* 高さ比率調整 */
   background-color: #fff;
+  transition: width 120ms linear; /* 微小の視覚ノイズを抑える */
 }
 .imageWrap img {
   position: absolute;
@@ -44,6 +47,12 @@
   height: 100%;
   bottom: 0;
   color: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  .imageWrap {
+    width: 100% !important;
+    transition: none;
+  }
 }
 
 .image {

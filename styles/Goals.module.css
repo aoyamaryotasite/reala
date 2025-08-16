@@ -97,6 +97,12 @@ font-size: 2vw;
   }
   .slideUp{ opacity: 1; transform: none; transition: none; }
 }
+@media (max-width: 1420px){
+
+.inner{
+padding: 0 10px;
+}
+}
 
 /* スマホ */
 @media (max-width: 900px){

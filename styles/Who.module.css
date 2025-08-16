@@ -1,5 +1,6 @@
 .section {
 padding-top: 5vw;
+padding-bottom: 5vw;
 }
 
 .wrap {
@@ -55,6 +56,7 @@ padding-top: 5vw;
   position: absolute;
   z-index: 2;
   margin: 0;
+    overflow: hidden;
 }
 
 .backdrop,
@@ -86,12 +88,15 @@ padding-top: 5vw;
 }
 
 .img {
-  display: block;
+ display: block;
   width: 100%;
-  height: auto;
+  height: 100%;       /* 親（figure）のサイズにフィット */
   object-fit: cover;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   outline: 1px solid rgba(0, 0, 0, 0.06);
+
+  transform: scale(1);          /* 初期状態 */
+  transition: transform 0.3s;   /* ズームをなめらかに */
 }
 
 /* 位置指定（スクショ比で調整） */
@@ -114,10 +119,13 @@ padding-top: 5vw;
   .cardBL{
     bottom: -7vw;
   }
+  .cardTR{
+      top: 33vw;
+  }
 }
 
 /* レスポンシブ：縦積み */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .wrap {
     min-height: 0;
     padding: 0 24px;
@@ -130,6 +138,7 @@ padding-top: 5vw;
     background: transparent;
   }
   .title{
+    font-size: 2rem;
     color: #222222;
   }
   .list{

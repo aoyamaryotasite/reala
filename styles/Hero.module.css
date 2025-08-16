@@ -13,9 +13,9 @@
   position: fixed;
   z-index: 999;
 }
-.inner{
-  max-width:1420px;
-  width:100%;
+.inner {
+  max-width: 1420px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -23,8 +23,8 @@
 }
 
 .brand {
-  color: var(--ink); 
-  letter-spacing: .02em;
+  color: #000;
+  letter-spacing: 0.02em;
   display: flex;
   font-size: 1.3rem;
 }
@@ -34,30 +34,92 @@
 }
 
 .applyBtn {
-    color: #fff;
-    z-index: 9;
-    text-align: center;
-    background: #373737;
-    width: 100%;
-    max-width: 186px;
-    padding: .5rem .8rem;
-    font-size: 1rem;
-    height: 100%;
-    font-weight: 700;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    position: absolute;
-    justify-content: center;
-    right: 0;
+  color: #fff;
+  z-index: 9;
+  text-align: center;
+  background: #373737;
+  width: 100%;
+  max-width: 186px;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  height: 100%;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  justify-content: center;
+  right: 0;
 }
+
+/* アイコンとテキストを横並びで少し余白 */
+.applyBtn {
+  gap: 8px; /* ← 追加 */
+  transition:
+    background-color .25s ease,
+    color .25s ease,
+    box-shadow .25s ease,
+    filter .25s ease;
+}
+
+/* 既存の hover は残しつつ、色変化＆シャドウをプラスしたい場合はこちら */
+.applyBtn:hover {
+  /* 既存: filter: brightness(1.05); は残してOK */
+  background: #285f65; /* ← wrap の色に合わせてトーン変更 */
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(40, 95, 101, 0.35);
+}
+
+/* アクセシビリティ（既存を活かす） */
 .applyBtn:focus-visible {
   outline: 3px solid rgba(59, 130, 246, 0.4);
   outline-offset: 2px;
 }
-.applyBtn:hover {
-  filter: brightness(1.05);
+
+/* 左のメールアイコン（SVGをマスクして currentColor で着色） */
+.iconImg{ width:18px;height:18px; display:inline-block; }
+
+
+/* ホバー時：アイコンを少しスライドさせて“反応感” */
+.applyBtn:hover .icon {
+  transform: translateX(2px);
 }
+
+/* テキストの下線スライド + ほんのりポップ */
+.applyBtnText {
+  position: relative;
+  font-weight: 700; /* 既存と同じですが念のため */
+  transition: letter-spacing .25s ease, transform .25s ease;
+}
+
+/* 下線は通常は非表示。ホバーで左→右へ伸びる */
+.applyBtnText::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width .28s ease;
+}
+
+.applyBtn:hover .applyBtnText::after {
+  width: 100%;
+}
+
+/* 文字の軽いポップ感（1回だけ） */
+.applyBtn:hover .applyBtnText {
+  animation: btnTextPop .6s ease both;
+  letter-spacing: .3px;
+}
+
+@keyframes btnTextPop {
+  0%   { transform: translateX(0) scale(1); }
+  40%  { transform: translateX(1px) scale(1.03); }
+  100% { transform: translateX(0) scale(1); }
+}
+
 
 .headings {
   z-index: 10;
@@ -69,7 +131,7 @@
   text-align: right;
   color: #fff;
 }
-.headings p{
+.headings p {
   line-height: 3;
 }
 .title {
@@ -102,22 +164,17 @@
 }
 
 .belt {
-  --beltW: 2000px; /* fallback */
-  --dur: 30s; /* fallback */
   display: flex;
   align-items: stretch;
   gap: 24px;
   width: max-content;
-  animation: beltLoop var(--dur) linear infinite;
+  will-change: transform;
+  animation: beltLoop var(--dur, 30s) linear infinite;
 }
-
+/* 2セットのちょうど半分＝1セットぶんだけ動かす */
 @keyframes beltLoop {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(calc(-1 * var(--beltW)));
-  }
+  from { transform: translate3d(0,0,0); }
+  to   { transform: translate3d(calc(-1 * var(--beltW)),0,0); }
 }
 
 .set {
@@ -128,10 +185,11 @@
 
 /* Image(fill) の直親を relative に（←超重要） */
 .slide {
-  position: relative; /* ← 追加 */
+  position: relative;
   --cardW: clamp(280px, 36vw, 560px);
   width: var(--cardW);
   height: 100%;
+  aspect-ratio: 16 / 10; /* 好みで固定比率 */
   overflow: hidden;
   flex: 0 0 auto;
 }
@@ -170,14 +228,17 @@
     --cardW: 100vw;
     height: 80%;
   }
-  .title{
+  .lead .break {
+    display: block; /* 前に改行される */
+  }
+  .title {
     font-size: 2.5rem;
   }
   .headings p {
     line-height: 1.5;
     margin-top: 1rem;
-}
-.brand{
-  margin-left: 16px;
-}
+  }
+  .brand {
+    margin-left: 16px;
+  }
 }

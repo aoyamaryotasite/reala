@@ -1,4 +1,3 @@
-
 .wrap {
   width: min(1420px, 92vw);
   margin: 72px auto 100px;
@@ -9,7 +8,7 @@
   font-size: clamp(28px, 3.5vw, 42px);
   letter-spacing: 0.14em;
   font-weight: 600;
-  color: var(--ink);
+  color: #000;
   margin: 8px 0 28px;
 }
 
@@ -25,7 +24,7 @@
 }
 
 .headerCell {
-  background: #40A7BE;
+  background: #285f65;
   color: #fff;
   font-weight: 700;
   padding: 18px 20px;
@@ -46,7 +45,7 @@
 }
 
 .rowAlt .cellLabel {
-  background:#fff;
+  background: #fff;
 }
 
 .cell {
@@ -93,8 +92,12 @@
       "label priceJPY"
       "priceUSD priceUSD";
   }
-  .row .cell:nth-child(1) { grid-area: label; }
-  .row .cell:nth-child(2) { grid-area: priceJPY; }
+  .row .cell:nth-child(1) {
+    grid-area: label;
+  }
+  .row .cell:nth-child(2) {
+    grid-area: priceJPY;
+  }
   .tableScroll {
     display: block;
     white-space: nowrap; /* 子要素を横並びにする */
@@ -103,8 +106,9 @@
     vertical-align: top;
   }
 
-.body,.headerRow {
-  min-width: 600px; /* ← スマホ幅より大きく */
+  .body,
+  .headerRow {
+    min-width: 600px; /* ← スマホ幅より大きく */
     vertical-align: top;
-}
+  }
 }
