@@ -54,7 +54,7 @@ export default function SproutLoader({
         <g className="sprout-bob">
           {/* ペン先（下向き） */}
           <g transform="translate(50,72) rotate(180)">
-            <rect x="-9" y="-26" width="18" height="5" rx="1.5" fill="var(--sprout-primary)" opacity="0.9" />
+            <rect x="-9" y="26" width="18" height="5" rx="1.5" fill="var(--sprout-primary)" opacity="0.9" />
             <path d="M 0,-26 L 14,10 Q 0,16 0,32 Q 0,16 -14,10 Z" fill="var(--sprout-primary)" />
             <circle cx="0" cy="6.5" r="2.2" fill="#fff" className="breather" />
             <rect x="-0.75" y="18" width="1.5" height="12" rx="1" fill="#fff" />

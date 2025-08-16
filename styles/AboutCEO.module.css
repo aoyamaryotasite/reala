@@ -40,7 +40,6 @@
   letter-spacing:.02em;
   color:var(--ink);
   margin:-12px 0 20px;
-  font-family: "Georgia", "Times New Roman", serif; /* 優雅な見出し */
 }
 
 .copy{

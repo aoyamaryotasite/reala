@@ -1,18 +1,22 @@
 import "../styles/globals.css";
 
-import { Noto_Serif } from "next/font/google";
+import {Barlow_Condensed} from 'next/font/google'
 
-const notoSerif = Noto_Serif({
-  subsets: ["latin"],
-  weight: ["400", "700"], // 必要なウェイト
-  variable: "--font-geist-mono" // ← Geist Monoを上書き
-});
 
-export const metadata = { title: "My Page" };
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ['latin'],
+  weight: ['400', '700'], // 必要なウェイトに変更
+  display: 'swap',
+})
+
+export const metadata = {   icons: {
+    icon: '/favicon.ico',
+  },};
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={notoSerif.variable}>
+    <html lang="en" className={`${barlowCondensed.className}`}>
       <body>{children}</body>
     </html>
   );

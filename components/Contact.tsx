@@ -90,7 +90,7 @@ export default function Contact() {
 
   return (
     <section className={styles.wrap} aria-labelledby="contact-heading">
-      <h2 id="contact-heading" className={styles.title}>CONTACT</h2>
+      <h2 id="contact-heading" className={styles.title}>Trial Lesson Application Form</h2>
 
       <form className={styles.form} onSubmit={onSubmit} noValidate>
         {/* 1. Full Name */}

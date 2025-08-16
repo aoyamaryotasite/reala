@@ -9,11 +9,10 @@
 }
 
 .title{
-  font-family: "Noto Serif", serif; /* 他のフォントにしたい場合はここを変更 */
   font-weight: 800;
   letter-spacing: -.01em;
 line-height: 1.55;
-  font-size:5.5vw; /* 大きめ見出し */
+  font-size:7.8vw; /* 大きめ見出し */
   color: #0f172a;
   margin: 0 0 .75rem;
 }
@@ -22,7 +21,7 @@ line-height: 1.55;
 font-size: 2vw;
   color: #334155;
   line-height: 1.75;
-  font-size: clamp(.95rem, .4vw + .9rem, 1.125rem);
+  font-size: clamp(.95rem, .4vw + .9rem, 1.525rem);
   margin: 0 0 1.75rem;
 }
 

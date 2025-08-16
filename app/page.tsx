@@ -3,6 +3,7 @@ import Script from "next/script";
 import "scroll-hint/css/scroll-hint.css";
 
 
+
 import PageLoader from "../components/PageLoader";
 
 import Hero from "../components/Hero";
@@ -171,7 +172,7 @@ const faqJsonLd = {
 
 export default function Page() {
   return (
-    <PageLoader minDurationMs={1800} slideMs={700}>
+    <PageLoader minDurationMs={2800} slideMs={1000}>
       <main>
         <Hero />
         {/* <PenLine /> */}

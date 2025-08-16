@@ -15,7 +15,7 @@ padding-top: 5vw;
   top: 6%;
   width: 48%;
   height: 76%;
-  background: #285f65; /* 水色 */
+  background: #7a9497; /* 水色 */
   border-radius: 8px;
   z-index: 1;
 }
@@ -30,20 +30,19 @@ padding-top: 5vw;
 }
 
 .title {
-  font-family: "Noto Serif", serif;
   font-weight: 800;
   letter-spacing: -0.01em;
   line-height: 1.1;
-  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-size: max(3.6rem, min(3.2vw, 3.4rem));
   margin: 0 0 0.6rem;
-    color: #bfbfbf;
+    color: #222;
 }
 
 .list {
   margin: 0.5rem 0 0;
   padding-left: 8.1rem;
-  color: #bfbfbf;
-  font-size: clamp(0.98rem, 0.35vw + 0.9rem, 1.125rem);
+  color: #222;
+  font-size: clamp(0.98rem, 0.35vw + 0.9rem, 1.825rem);
   line-height: 1.8;
   font-weight: bold;
 }
@@ -77,13 +76,13 @@ padding-top: 5vw;
   transition-delay: 0.3s;
 }
 .card:nth-of-type(1).in {
-  transition-delay: 0.6s;
+  transition-delay: 0.3s;
 }
 .card:nth-of-type(2).in {
-  transition-delay: 0.9s;
+  transition-delay: 0.6s;
 }
 .card:nth-of-type(3).in {
-  transition-delay: 1.2s;
+  transition-delay: 0.9s;
 }
 
 .img {
@@ -103,13 +102,18 @@ padding-top: 5vw;
 }
 .cardTR {
   width: 21%;
-  top: 45%;
+  top:21vw;
   right: 17%;
 }
 .cardBL {
   width: 38%;
-    bottom: -10vw;
+    bottom: -15vw;
   left: 12%;
+}
+@media (max-width:1600px) {
+  .cardBL{
+    bottom: -7vw;
+  }
 }
 
 /* レスポンシブ：縦積み */

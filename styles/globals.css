@@ -9,7 +9,7 @@ body {
 body {
   color: var(--foreground);
   background:#f0eae2;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Barlow Condensed, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

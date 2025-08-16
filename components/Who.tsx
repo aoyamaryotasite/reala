@@ -20,7 +20,7 @@ export default function Who() {
             setTimeout(() => backdrop.classList.add(styles.in), 100);
             setTimeout(() => textBox.classList.add(styles.in), 400);
             cards.forEach((card, i) => {
-              setTimeout(() => card.classList.add(styles.in), 700 + i * 300);
+              setTimeout(() => card.classList.add(styles.in), 200 + i * 300);
             });
             observer.disconnect(); // 1回だけ実行
           }

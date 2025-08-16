@@ -10,15 +10,15 @@ export default function HeroHeader() {
       <div className={styles.inner}>
       <p className={styles.brand}>
         <Image
-          src="/logo.webp"        // ロゴファイルのパス（public配下）
+          src="/logo.webp?ver=0816"        // ロゴファイルのパス（public配下）
           alt="REALA Logo"       // 説明文
           width={120}            // 適宜調整
           height={40}            // 適宜調整
           priority               // 表示優先
         />
       </p>
-      <Link href="#apply" className={styles.applyBtn}>
-        apply
+      <Link href="#contact-heading" className={styles.applyBtn}>
+        Sign Up
       </Link>
     </div>
     </div>
