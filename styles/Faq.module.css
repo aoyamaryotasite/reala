@@ -47,6 +47,7 @@
   min-width: 38px;
   font-weight: 600;
   font-size: 16px;
+  font-family:Barlow Condensed,Helvetica,sans-serif;
 }
 
 .qText {
@@ -89,6 +90,8 @@
   color: #8a939a;
   min-width: 38px;
   font-weight: 600;
+    font-family:Barlow Condensed,Helvetica,sans-serif;
+
 }
 
 .aText {

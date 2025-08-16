@@ -43,6 +43,9 @@
   gap: clamp(12px, 1.8vw, 18px);
   align-items: center;
 }
+.subtitle{
+  color:"000;"
+}
 
 .rowAlt .cellLabel {
   background: #fff;

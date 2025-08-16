@@ -124,6 +124,11 @@ padding-bottom: 12vw;
   }
 }
 
+@media (max-width: 768px) and (min-width: 500px) {
+    .textBox {
+       top: 40rem;
+    }
+}
 /* レスポンシブ：縦積み */
 @media (max-width: 768px) {
   .wrap {
