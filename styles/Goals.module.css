@@ -112,7 +112,7 @@ padding: 0 10px;
   .grid{ grid-template-columns: 1fr; }
   .section {padding: 3rem 016px 5rem;}
   .title{
-    font-size: 3rem;
+    font-size:16vw;
     line-height: 1.18;
   }
  .grid{ grid-template-columns: repeat(2, 1fr); }

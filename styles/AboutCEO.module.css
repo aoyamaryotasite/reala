@@ -84,7 +84,7 @@
 /* 写真側 */
 .photoPane {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   justify-self: end;
 }
 
