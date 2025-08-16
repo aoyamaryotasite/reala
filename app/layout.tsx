@@ -16,9 +16,14 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   // サーバーで opt-out を判定（cookie: ga-opt-out=1）
-  const gaOptOut = cookies().get("ga-opt-out")?.value === "1";
+  const cookieStore = await cookies();
+  const gaOptOut = cookieStore.get("ga-opt-out")?.value === "1";
   const MEASUREMENT_ID = "G-E1EY692JJC";
 
   return (
