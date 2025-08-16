@@ -1,4 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
+import type { PageProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -8,15 +9,13 @@ import ColumnSidebar from "../../../components/ColumnSidebar";
 import Footer from "../../../components/Footer";
 import HeroHeader from "../../../components/HeroHeader";
 
-
-
 export const revalidate = 600;
 
 export async function generateMetadata(
-  { params }: any,
+  { params }: PageProps<{ slug: string }>,
   _parent?: ResolvingMetadata
 ): Promise<Metadata> {
-  const slug: string = params.slug;
+  const { slug } = await params; // ← await が必要
   const post = await getColumnBySlug(slug);
   if (!post) return {};
 
@@ -42,10 +41,13 @@ export async function generateMetadata(
     },
   };
 }
-export default async function ColumnDetail({ params }: any) {
-  const slug: string = params.slug;
+
+export default async function ColumnDetail(
+  { params }: PageProps<{ slug: string }>
+) {
+  const { slug } = await params; // ← await が必要
   const post = await getColumnBySlug(slug);
-  if (!post) return notFound();
+  if (!post) notFound();
 
   return (
     <>
@@ -80,9 +82,7 @@ export default async function ColumnDetail({ params }: any) {
                 day: "numeric",
               })}</>
             )}
-            {post.category && (
-              <> | Category: {post.category.name}</>
-            )}
+            {post.category && <> | Category: {post.category.name}</>}
           </p>
 
           {post.eyecatch && (
