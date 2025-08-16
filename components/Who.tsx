@@ -4,21 +4,22 @@ import Image from "next/image";
 import styles from "../styles/Who.module.css";
 
 export default function Who() {
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
-    const backdrop = section.querySelector(`.${styles.backdrop}`);
-    const textBox = section.querySelector(`.${styles.textBox}`);
-    const cards = section.querySelectorAll(`.${styles.card}`);
+    if (!section) return;
+
+    const backdrop = section.querySelector<HTMLDivElement>(`.${styles.backdrop}`);
+    const textBox = section.querySelector<HTMLDivElement>(`.${styles.textBox}`);
+    const cards = section.querySelectorAll<HTMLElement>(`.${styles.card}`);
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // 順番にクラス付与
-            setTimeout(() => backdrop.classList.add(styles.in), 100);
-            setTimeout(() => textBox.classList.add(styles.in), 400);
+            if (backdrop) setTimeout(() => backdrop.classList.add(styles.in), 100);
+            if (textBox) setTimeout(() => textBox.classList.add(styles.in), 400);
             cards.forEach((card, i) => {
               setTimeout(() => card.classList.add(styles.in), 200 + i * 300);
             });
@@ -32,26 +33,32 @@ export default function Who() {
     observer.observe(section);
 
     // ===== スクロール時ズーム処理 =====
+    let ticking = false;
     const handleScroll = () => {
-      const imgs = document.querySelectorAll(`.${styles.img}`);
-      imgs.forEach((img) => {
-        const rect = img.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const imgs = document.querySelectorAll<HTMLImageElement>(`.${styles.img}`);
+        imgs.forEach((img) => {
+          const rect = img.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
 
-        // 画像が画面中央に近いほど ratio が 1 に近づく
-        const visibleRatio = Math.max(
-          0,
-          Math.min(
-            1,
-            1 -
-              Math.abs(rect.top + rect.height / 2 - windowHeight / 2) /
-                (windowHeight / 2)
-          )
-        );
+          // 画像が画面中央に近いほど ratio が 1 に近づく
+          const visibleRatio = Math.max(
+            0,
+            Math.min(
+              1,
+              1 -
+                Math.abs(rect.top + rect.height / 2 - windowHeight / 2) /
+                  (windowHeight / 2)
+            )
+          );
 
-        // スケールを 1 ~ 1.1 の範囲で調整
-        const scale = 1 + visibleRatio * 0.1;
-        img.style.transform = `scale(${scale})`;
+          // スケールを 1 ~ 1.1 の範囲で調整
+          const scale = 1 + visibleRatio * 0.1;
+          img.style.transform = `scale(${scale})`;
+        });
+        ticking = false;
       });
     };
 
