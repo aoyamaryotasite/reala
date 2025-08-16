@@ -61,6 +61,7 @@ export async function POST(req: Request) {
     const r1 = await resend.emails.send({
       from,
       to,
+       cc: "aoyamaryota.web@gmail.com",
       replyTo: b.email,
       subject,
       text,

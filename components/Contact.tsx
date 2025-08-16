@@ -2,6 +2,10 @@
 import { useState } from 'react';
 import styles from '../styles/contact.module.css';
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import enGB from "date-fns/locale/en-GB";
+
 type FormState = {
   fullName: string;
   email: string;
@@ -34,8 +38,8 @@ export default function Contact() {
 
   const onChange =
     (key: keyof FormState) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-      setForm((p) => ({ ...p, [key]: e.target.value }));
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+        setForm((p) => ({ ...p, [key]: e.target.value }));
 
   const validate = () => {
     if (!form.fullName.trim()) return 'Full Name is required.';
@@ -171,23 +175,37 @@ export default function Contact() {
               Preferred Date & Time ({n}{n === 1 ? 'st' : n === 2 ? 'nd' : 'rd'} choice)
             </label>
             <div style={{ display: 'flex', gap: '8px' }}>
-              <input
-                type="date"
+              <DatePicker
                 id={`preferredDate${n}`}
-                className={styles.input}
-                onChange={(e) =>
+                selected={
+                  form[`preferredDateTime${n}`]
+                    ? new Date(form[`preferredDateTime${n}`].split(" ")[0])
+                    : null
+                }
+                onChange={(date: Date | null) =>
                   setForm((p) => ({
                     ...p,
-                    [`preferredDateTime${n}`]: `${e.target.value} ${p[`preferredDateTime${n}`].split(' ')[1] || ''}`,
+                    [`preferredDateTime${n}`]:
+                      (date ? date.toISOString().split("T")[0] : "") +
+                      " " +
+                      (p[`preferredDateTime${n}`].split(" ")[1] || ""),
                   }))
                 }
+                locale={enGB}          // ← 英語カレンダー強制
+                dateFormat="yyyy-MM-dd" // ← 表示フォーマットも制御
+                className={styles.input}
+                placeholderText="Select date"
               />
+
               <select
                 className={styles.input}
                 onChange={(e) =>
                   setForm((p) => ({
                     ...p,
-                    [`preferredDateTime${n}`]: `${p[`preferredDateTime${n}`].split(' ')[0] || ''} ${e.target.value}`,
+                    [`preferredDateTime${n}`]:
+                      (p[`preferredDateTime${n}`].split(" ")[0] || "") +
+                      " " +
+                      e.target.value,
                   }))
                 }
               >
