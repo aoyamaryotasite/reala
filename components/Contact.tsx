@@ -7,7 +7,7 @@ type FormState = {
   email: string;
   country: string;
   timeZone: string;
-  preferredDateTime1: string;
+  preferredDateTime1: string; // "YYYY-MM-DD HH:MM" (built from separate inputs)
   preferredDateTime2: string;
   preferredDateTime3: string;
   message: string;
@@ -124,6 +124,9 @@ const timeZoneOptions: Option[] = [
 // Lesson time options (10:00–18:00)
 const timeOptions = Array.from({ length: 9 }, (_, i) => `${10 + i}:00`);
 
+// --- Debug switch ---
+const DEBUG = true;
+
 export default function Contact() {
   const [form, setForm] = useState<FormState>({
     fullName: '',
@@ -153,20 +156,88 @@ export default function Contact() {
     return null;
   };
 
+  // --- helpers: normalize payload ---
+  const toChoice = (v?: string) => {
+    if (!v) return null;
+    const [date, time] = v.split(' ');
+    if (!date || !time) return null;
+    return { date, time };
+  };
+
+  const buildPayload = () => {
+    const choices = [
+      toChoice(form.preferredDateTime1),
+      toChoice(form.preferredDateTime2),
+      toChoice(form.preferredDateTime3),
+    ].filter(Boolean) as Array<{ date: string; time: string }>;
+
+    return {
+      fullName: form.fullName.trim(),
+      email: form.email.trim(),
+      country: form.country,
+      timeZone: form.timeZone, // IANA ID
+      choices,                  // [{ date: "YYYY-MM-DD", time: "HH:MM" }, ...]
+      message: form.message.trim() || '',
+      // For debugging: also include ISO suggestion (not sent if you remove it)
+      // isoPreview: choices.map(c => `${c.date}T${c.time}:00`)
+    };
+  };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setNotice(null);
     const err = validate();
     if (err) return setNotice(err);
 
+    const payload = buildPayload();
+
+    // ---- DEBUG: log everything about to be sent ----
+    if (DEBUG) {
+      console.groupCollapsed('[Contact] Submitting payload');
+      console.log('Payload object:', payload);
+      if (payload.choices?.length) {
+        console.table(payload.choices);
+      } else {
+        console.warn('No choices provided (only first is required).');
+      }
+      console.groupEnd();
+    }
+
     try {
       setSubmitting(true);
+
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error('Request failed');
+
+      if (DEBUG) console.log('Server response status:', res.status);
+
+      if (!res.ok) {
+        // Try to read JSON error body first
+        let serverMsg = '';
+        try {
+          const j = await res.json();
+          serverMsg = j?.error || JSON.stringify(j);
+        } catch {
+          serverMsg = await res.text();
+        }
+        if (DEBUG) console.error('Submission failed. Server said:', serverMsg);
+        throw new Error(serverMsg || 'Request failed');
+      }
+
+      // Optionally inspect success response
+      if (DEBUG) {
+        try {
+          const data = await res.json();
+          console.log('Success response JSON:', data);
+        } catch {
+          // maybe no JSON body
+          console.log('Success with no JSON body.');
+        }
+      }
+
       setNotice('Thanks! We received your message.');
       setForm({
         fullName: '',
@@ -178,8 +249,8 @@ export default function Contact() {
         preferredDateTime3: '',
         message: '',
       });
-    } catch {
-      setNotice('Sorry, something went wrong. Please try again later.');
+    } catch (e: any) {
+      setNotice(e?.message || 'Sorry, something went wrong. Please try again later.');
     } finally {
       setSubmitting(false);
     }
@@ -199,6 +270,7 @@ export default function Contact() {
             value={form.fullName}
             onChange={onChange('fullName')}
             autoComplete="name"
+            required
           />
         </div>
 
@@ -212,6 +284,7 @@ export default function Contact() {
             value={form.email}
             onChange={onChange('email')}
             autoComplete="email"
+            required
           />
         </div>
 
@@ -223,6 +296,7 @@ export default function Contact() {
             className={styles.input}
             value={form.country}
             onChange={onChange('country')}
+            required
           >
             <option value="">-- Select Country --</option>
             {countryOptions.map((c) => (
@@ -239,6 +313,7 @@ export default function Contact() {
             className={styles.input}
             value={form.timeZone}
             onChange={onChange('timeZone')}
+            required
           >
             <option value="">-- Select Time Zone --</option>
             {timeZoneOptions.map((tz) => (
@@ -263,6 +338,7 @@ export default function Contact() {
                     [`preferredDateTime${n}` as const]: `${e.target.value} ${p[`preferredDateTime${n}` as const]?.split(' ')[1] || ''}`.trim(),
                   }))
                 }
+                required={n === 1}
               />
               <select
                 className={styles.input}
@@ -272,6 +348,7 @@ export default function Contact() {
                     [`preferredDateTime${n}` as const]: `${p[`preferredDateTime${n}` as const]?.split(' ')[0] || ''} ${e.target.value}`.trim(),
                   }))
                 }
+                required={n === 1}
               >
                 <option value="">-- Time --</option>
                 {timeOptions.map((t) => (
@@ -302,6 +379,16 @@ export default function Contact() {
 
         {notice && <p className={styles.notice}>{notice}</p>}
       </form>
+
+      {/* ---------- Debug Panel (UI) ---------- */}
+      {DEBUG && (
+        <div style={{ marginTop: 16, padding: 12, border: '1px dashed #bbb', borderRadius: 8, background: '#fafafa' }}>
+          <strong>Payload Preview (not actually sent until you click Submit):</strong>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', marginTop: 8 }}>
+{JSON.stringify(buildPayload(), null, 2)}
+          </pre>
+        </div>
+      )}
     </section>
   );
 }
