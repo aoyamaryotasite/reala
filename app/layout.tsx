@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import { Barlow_Condensed } from "next/font/google";
 import Script from "next/script";
 import { cookies } from "next/headers";
+import type { Metadata } from 'next';
 
 
 
