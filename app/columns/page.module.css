@@ -8,6 +8,7 @@
 
 .main {
   min-width: 0;
+  color: #000;
 }
 
 .eyecatch {
@@ -73,6 +74,9 @@
 .card h3 {
   margin: 0 0 12px;
   font-size: 16px;
+    background-color: #373737;
+  color: #fff;
+  padding: 10px;
 }
 
 .latestList,
@@ -115,9 +119,10 @@
 .searchBtn {
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #d8dee3;
   border-radius: 8px;
-  background: #f5f7f8;
+  border:none;
+  color: #fff;
+  background: #285f65;
   cursor: pointer;
 }
 .postBody :global(h2) {

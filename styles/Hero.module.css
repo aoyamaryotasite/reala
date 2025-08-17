@@ -33,6 +33,65 @@
   margin-left: 0.25rem;
 }
 
+/* 右側コントロール（ハンバーガー＋SignUp を横並び） */
+.rightControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+/* ===== ハンバーガー ===== */
+.menuBtn {
+  --btnSize: 18px;
+  margin-right: 10px;
+  inline-size: var(--btnSize);
+  block-size: var(--btnSize);
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease, transform 0.2s ease,
+    background-color 0.25s ease;
+}
+.menuBtn:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+.menuBtn:active {
+  transform: translateY(1px) scale(0.98);
+}
+.menuBtn:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.4);
+  outline-offset: 2px;
+}
+
+.menuBar {
+  width: 20px;
+  height: 2px;
+  background: #222;
+  border-radius: 2px;
+  display: block;
+  position: relative;
+  transition: transform 0.25s ease, opacity 0.2s ease,
+    background-color 0.25s ease;
+}
+.menuBar + .menuBar {
+  margin-top: 5px;
+}
+
+/* X へのアニメーション */
+.menuBtnOpen .menuBar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.menuBtnOpen .menuBar:nth-child(2) {
+  opacity: 0;
+}
+.menuBtnOpen .menuBar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 .applyBtn {
   color: #fff;
   z-index: 9;
@@ -47,7 +106,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
-  position: absolute;
+  position: relative; /* ← absolute だとオーバーラップするため修正 */
   justify-content: center;
   right: 0;
 }
@@ -55,11 +114,8 @@
 /* アイコンとテキストを横並びで少し余白 */
 .applyBtn {
   gap: 8px; /* ← 追加 */
-  transition:
-    background-color .25s ease,
-    color .25s ease,
-    box-shadow .25s ease,
-    filter .25s ease;
+  transition: background-color 0.25s ease, color 0.25s ease,
+    box-shadow 0.25s ease, filter 0.25s ease;
 }
 
 /* 既存の hover は残しつつ、色変化＆シャドウをプラスしたい場合はこちら */
@@ -77,8 +133,11 @@
 }
 
 /* 左のメールアイコン（SVGをマスクして currentColor で着色） */
-.iconImg{ width:18px;height:18px; display:inline-block; }
-
+.iconImg {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}
 
 /* ホバー時：アイコンを少しスライドさせて“反応感” */
 .applyBtn:hover .icon {
@@ -89,7 +148,7 @@
 .applyBtnText {
   position: relative;
   font-weight: 700; /* 既存と同じですが念のため */
-  transition: letter-spacing .25s ease, transform .25s ease;
+  transition: letter-spacing 0.25s ease, transform 0.25s ease;
 }
 
 /* 下線は通常は非表示。ホバーで左→右へ伸びる */
@@ -101,7 +160,7 @@
   width: 0;
   height: 2px;
   background: currentColor;
-  transition: width .28s ease;
+  transition: width 0.28s ease;
 }
 
 .applyBtn:hover .applyBtnText::after {
@@ -110,17 +169,223 @@
 
 /* 文字の軽いポップ感（1回だけ） */
 .applyBtn:hover .applyBtnText {
-  animation: btnTextPop .6s ease both;
-  letter-spacing: .3px;
+  animation: btnTextPop 0.6s ease both;
+  letter-spacing: 0.3px;
 }
 
 @keyframes btnTextPop {
-  0%   { transform: translateX(0) scale(1); }
-  40%  { transform: translateX(1px) scale(1.03); }
-  100% { transform: translateX(0) scale(1); }
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  40% {
+    transform: translateX(1px) scale(1.03);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
 }
 
+/* ====== Overlay Global Nav ====== */
+.gnav {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 18, 16, 0);
+  opacity: 0;
+  visibility: hidden;
+  transition: background 0.25s ease, opacity 0.25s ease, visibility 0.25s ease;
+  z-index: 998; /* topbar(999)の下→中身を上げるのでOK */
+  display: grid;
+  place-items: center;
+}
+.gnavOpen {
+  background: rgba(20, 18, 16, 0.65);
+  opacity: 1;
+  visibility: visible;
+}
 
+.gnavInner {
+  width: min(1200px, 92vw);
+  background: #211f1d; /* 添付の濃いブラウン系 */
+  color: #e9e4dc;
+  border-radius: 14px;
+  padding: max(20px, min(7.2vw, 403px));
+  transform: translateY(12px);
+  transition: transform 0.25s ease;
+  position: relative;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+}
+.gnavOpen .gnavInner {
+  transform: translateY(0);
+}
+
+.gnavClose {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 28px;
+  line-height: 1;
+  color: #e9e4dc;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* === 横並びナビの行 === */
+.mainRow {
+  margin-top: 8px;
+}
+.mainLinks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(16px, 4vw, 48px); /* 項目間の横スペース */
+  justify-content: center; /* 中央寄せ */
+  align-items: center;
+}
+.mainLinks li a {
+  text-decoration: none;
+  color: #f4efe7;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  font-size: clamp(18px, 2.6vw, 30px);
+  display: inline-block;
+  transition: transform 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+}
+.mainLinks li a:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+/* === SNSだけ独立の“カラム”を中央に === */
+.snsCol {
+  margin-top: clamp(16px, 3.2vw, 28px);
+  display: grid;
+  place-items: center; /* 完全中央配置 */
+  text-align: center;
+  border-top: 1px solid;
+  padding-top: 1rem;
+}
+.colTtl {
+  font-size: clamp(16px, 2.2vw, 22px);
+  letter-spacing: 0.1em;
+  color: #e9e4dc;
+  margin: 0 0 8px;
+}
+.snsRow {
+  display: flex;
+  gap: 12px;
+}
+.snsRow a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+  transition: transform 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+.snsRow a:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* 下線アニメ（左→右） */
+.mainLinks li a,
+.snsRow a {
+  position: relative;
+}
+.mainLinks li a::after,
+.snsRow a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px; /* テキスト下に細い線 */
+  height: 2px;
+  width: 0;
+  background: currentColor;
+  transition: width 0.4s ease; /* 伸び速度 */
+}
+.mainLinks li a:hover::after,
+.snsRow a:hover::after {
+  width: 100%;
+}
+
+/* 文字の“波打ち” */
+.wavy {
+  display: inline-block;
+  white-space: pre; /* スペースも保持（SIGN UP用） */
+}
+.wavy > span {
+  display: inline-block;
+  transform: translateY(0);
+  will-change: transform;
+}
+.mainLinks li a:hover .wavy > span,
+.snsRow a:hover .wavy > span {
+  animation: wavy-bounce 0.6s ease calc(var(--i) * 35ms) 1 both;
+}
+
+/* 波のキーアニメーション（控えめ） */
+@keyframes wavy-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(-4px);
+  }
+  60% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* 既存のhover効果と共存：色やわずかな浮き上がりはそのまま */
+.mainLinks li a:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+/* アニメ苦手な人向け（OS設定で軽減） */
+@media (prefers-reduced-motion: reduce) {
+  .mainLinks li a::after,
+  .snsRow a::after {
+    transition: none;
+    width: 100%; /* hoverなしで常時下線にしてもOKならここを調整 */
+  }
+  .mainLinks li a:hover .wavy > span,
+  .snsRow a:hover .wavy > span {
+    animation: none !important;
+  }
+}
+
+/* === レスポンシブ微調整 === */
+@media (max-width: 768px) {
+  .mainLinks {
+    gap: 18px;
+    flex-direction: column;
+align-items: baseline;
+  }
+  .snsRow a {
+    width: 34px;
+    height: 34px;
+  }
+  .mainLinks li a{
+font-size: max(18px, min(11.6vw, 34px));
+  }
+}
 .headings {
   z-index: 10;
   text-align: center;
@@ -173,8 +438,12 @@
 }
 /* 2セットのちょうど半分＝1セットぶんだけ動かす */
 @keyframes beltLoop {
-  from { transform: translate3d(0,0,0); }
-  to   { transform: translate3d(calc(-1 * var(--beltW)),0,0); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-1 * var(--beltW)), 0, 0);
+  }
 }
 
 .set {
