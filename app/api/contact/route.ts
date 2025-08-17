@@ -141,7 +141,7 @@ Reala Academy Team
     console.error('[/api/contact] ERROR:', err?.message || err, err);
     return NextResponse.json(
       { ok: false, error: err?.message || 'Server error', details: err?.response || err?.data || null },
-      { status: 500 }
+      { status: 500 } 
     );
   }
 }
