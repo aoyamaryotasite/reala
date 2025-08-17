@@ -20,7 +20,7 @@ import Footer from "../components/Footer";
 
 
 export const metadata: Metadata = {
-  title: "REALA Japanese Academy| Online Japanese Lessons (Free Talk / Textbook / JLPT / Intensive)",
+  title: "REALA Japanese Academy | Online Japanese Lessons (Free Talk / Textbook / JLPT / Intensive)",
   description:
     "Take personalized Japanese lessons online. Choose 25 or 50 minutes. English support available. Free talk, textbook-based study, JLPT prep, and short-term intensive plans.",
   alternates: {
