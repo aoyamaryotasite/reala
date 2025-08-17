@@ -322,7 +322,7 @@ export default function Contact() {
           </select>
         </div>
 
-        {/* Preferred Date & Time (1st~3rd) */}
+ 
         {[1, 2, 3].map((n) => (
           <div className={styles.row} key={n}>
             <label className={styles.label}>
@@ -380,15 +380,7 @@ export default function Contact() {
         {notice && <p className={styles.notice}>{notice}</p>}
       </form>
 
-      {/* ---------- Debug Panel (UI) ---------- */}
-      {DEBUG && (
-        <div style={{ marginTop: 16, padding: 12, border: '1px dashed #bbb', borderRadius: 8, background: '#fafafa' }}>
-          <strong>Payload Preview (not actually sent until you click Submit):</strong>
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', marginTop: 8 }}>
-{JSON.stringify(buildPayload(), null, 2)}
-          </pre>
-        </div>
-      )}
+
     </section>
   );
 }
