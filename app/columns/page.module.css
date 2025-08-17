@@ -159,7 +159,7 @@
 }
 
 .hr {
-  border: 0;
+  border: 0 ;
   border-top: 1px solid #eef2f5;
   margin: 20px 0;
 }
