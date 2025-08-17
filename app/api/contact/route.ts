@@ -4,6 +4,9 @@ import { Resend } from 'resend';
 
 export const runtime = 'nodejs';
 
+// 受理するプラットフォーム（サーバー側でもホワイトリスト）
+const ALLOWED_PLATFORMS = ['Zoom', 'Google Meet', 'Either is fine'] as const;
+
 // --- util ---
 function need(name: string) {
   const v = process.env[name];
@@ -32,9 +35,8 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({}));
     console.log('[contact] raw body:', body);
 
-    // フロントから choices 配列で来ても、旧キー（preferredDateTime1~3）でもOKにする
+    // ---- 希望日時（配列 or 旧キー）----
     let choices: Array<{ date: string; time: string }> = [];
-
     if (Array.isArray(body.choices)) {
       choices = body.choices
         .map((c: any) => (c?.date && c?.time ? { date: String(c.date), time: String(c.time) } : null))
@@ -46,7 +48,23 @@ export async function POST(req: Request) {
       choices = [c1, c2, c3].filter(Boolean) as Array<{ date: string; time: string }>;
     }
 
-    // ---- 必須フィールド検証（Purpose / japaneseLevel / learningHistory は不要）----
+    // ---- プラットフォーム（配列推奨／単一文字列も後方互換）----
+    const rawPlatforms: string[] = Array.isArray(body.preferredPlatforms)
+      ? body.preferredPlatforms
+      : (typeof body.preferredPlatform === 'string' && body.preferredPlatform
+          ? [body.preferredPlatform]
+          : []);
+
+    // 正規化 + 重複除去 + ホワイトリスト
+    const platforms = Array.from(
+      new Set(
+        rawPlatforms
+          .map((v) => String(v).trim())
+          .filter(Boolean)
+      )
+    ).filter((v) => (ALLOWED_PLATFORMS as readonly string[]).includes(v));
+
+    // ---- 必須フィールド検証 ----
     const required = {
       fullName: String(body.fullName || '').trim(),
       email: String(body.email || '').trim(),
@@ -70,10 +88,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: 'At least one preferred date/time is required' }, { status: 400 });
     }
 
+    // プラットフォームは最低1つ（必須）
+    if (platforms.length === 0) {
+      return NextResponse.json({ ok: false, error: 'Preferred platform is required' }, { status: 400 });
+    }
+
     // 任意
     const message = (body.message ?? body.otherMessage ?? '').toString();
 
-    // ---- 送信用本文（不要項目は一切含めない）----
+    // ---- 送信用本文（不要項目は含めない）----
     const lines = [
       `New trial lesson inquiry`,
       `--------------------------------`,
@@ -81,6 +104,7 @@ export async function POST(req: Request) {
       `Email: ${required.email}`,
       `Country: ${required.country}`,
       `Time Zone: ${required.timeZone}`,
+      `Preferred Platform: ${platforms.join(', ')}`,
       `Preferred Date & Time:`,
       ...choices.map((c, i) => `  ${i + 1}) ${c.date} ${c.time}`),
       ``,
@@ -116,6 +140,7 @@ We have received your details:
 - Email: ${required.email}
 - Country: ${required.country}
 - Time Zone: ${required.timeZone}
+- Preferred Platform: ${platforms.join(', ')}
 
 Preferred Date & Time:
 ${choices.map((c, i) => `  ${i + 1}) ${c.date} ${c.time}`).join('\n')}
@@ -141,7 +166,7 @@ Reala Academy Team
     console.error('[/api/contact] ERROR:', err?.message || err, err);
     return NextResponse.json(
       { ok: false, error: err?.message || 'Server error', details: err?.response || err?.data || null },
-      { status: 500 } 
+      { status: 500 }
     );
   }
 }

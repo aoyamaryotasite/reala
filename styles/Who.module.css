@@ -153,7 +153,7 @@ padding-bottom: 12vw;
   .textBox {
     position: absolute;
     width: auto;
-        top: 49rem;
+        top: 53rem;
   }
   .card,
   .cardTL,
@@ -176,3 +176,10 @@ padding-bottom: 12vw;
     }
 }
 
+@media (max-width: 400px) {
+   .textBox {
+    position: absolute;
+    width: auto;
+        top: 49rem;
+  }
+}

@@ -16,6 +16,21 @@
   text-decoration: underline;
 }
 
+.inlineChecks {
+  display: flex;
+  gap: 12px 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* 各チェックのラベル見た目 */
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+
 .privacyLink:hover {
   color: #1d4c51;   /* hover時に少し濃い色 */
   text-decoration: underline;

@@ -41,39 +41,6 @@ export default function Hero() {
     return () => ro.disconnect();
   }, []);
 
-  // ====== スクロール・パララックス（上下にふわっと） ======
-  useEffect(() => {
-    if (!beltRef.current) return;
-
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReduced) return; // 動きが苦手なユーザー配慮
-
-    const slidesEls = beltRef.current.querySelectorAll<HTMLElement>("[data-parallax='1']");
-    let ticking = false;
-
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY || 0;
-        slidesEls.forEach((el) => {
-          const speed = Number(el.dataset.speed || "0.2"); // 0.0〜0.5くらいが自然
-          // 上下移動量（px）を控えめに
-          const offset = Math.max(-40, Math.min(40, y * speed * 0.2));
-          el.style.setProperty("--parY", `${offset.toFixed(2)}px`);
-        });
-        ticking = false;
-      });
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll(); // 初期反映
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
     <>

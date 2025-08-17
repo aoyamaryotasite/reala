@@ -13,6 +13,7 @@ type FormState = {
   preferredDateTime2: string;
   preferredDateTime3: string;
   message: string;
+  preferredPlatforms: string[]; // ← 追加：プラットフォーム選択
 };
 
 type Option = { value: string; label: string };
@@ -48,6 +49,7 @@ const countryOptions: Option[] = [
   { value: 'Chile', label: 'Chile' },
   { value: 'Colombia', label: 'Colombia' },
   { value: 'Peru', label: 'Peru' },
+  { value: 'Other', label: 'Other' }, // ← 追加
 ];
 
 // Time zones (English)
@@ -126,6 +128,13 @@ const timeZoneOptions: Option[] = [
 // Lesson time options (10:00–18:00)
 const timeOptions = Array.from({ length: 9 }, (_, i) => `${10 + i}:00`);
 
+// プラットフォーム選択肢
+const PLATFORM_OPTIONS = [
+  { value: 'Zoom', label: 'Zoom' },
+  { value: 'Google Meet', label: 'Google Meet' },
+  { value: 'Either is fine', label: 'Either is fine' },
+] as const;
+
 export default function ContactPage() {
   const [form, setForm] = useState<FormState>({
     fullName: '',
@@ -136,6 +145,7 @@ export default function ContactPage() {
     preferredDateTime2: '',
     preferredDateTime3: '',
     message: '',
+    preferredPlatforms: [], // ← 追加
   });
 
   const [submitting, setSubmitting] = useState(false);
@@ -147,12 +157,30 @@ export default function ContactPage() {
       (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
         setForm((p) => ({ ...p, [key]: e.target.value }));
 
+  // プラットフォームのチェック切り替え（「Either」は排他）
+  const onTogglePlatform = (value: string) => {
+    setForm((p) => {
+      const has = p.preferredPlatforms.includes(value);
+      let next = has
+        ? p.preferredPlatforms.filter((v) => v !== value)
+        : [...p.preferredPlatforms, value];
+
+      if (value === 'Either is fine' && !has) {
+        next = ['Either is fine'];
+      } else if (value !== 'Either is fine' && next.includes('Either is fine')) {
+        next = next.filter((v) => v !== 'Either is fine');
+      }
+      return { ...p, preferredPlatforms: next };
+    });
+  };
+
   const validate = () => {
     if (!form.fullName.trim()) return 'Full Name is required.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return 'Valid email required.';
     if (!form.country) return 'Country is required.';
     if (!form.timeZone) return 'Time Zone is required.';
     if (!form.preferredDateTime1) return 'Preferred Date & Time (1st choice) is required.';
+    if (form.preferredPlatforms.length === 0) return 'Preferred Platform is required.'; // ← 追加
     if (!agreed) return 'You must agree to the Privacy Policy.';
     return null;
   };
@@ -163,7 +191,7 @@ export default function ContactPage() {
 
     const err = validate();
     if (err) {
-      alert(err); // show alert explicitly
+      alert(err);
       return setNotice(err);
     }
 
@@ -172,7 +200,7 @@ export default function ContactPage() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, agreed }),
+        body: JSON.stringify({ ...form, agreed }), // preferredPlatforms も送信されます
       });
       if (!res.ok) throw new Error('Request failed');
       setNotice('Thanks! We received your message.');
@@ -185,6 +213,7 @@ export default function ContactPage() {
         preferredDateTime2: '',
         preferredDateTime3: '',
         message: '',
+        preferredPlatforms: [], // ← リセット
       });
       setAgreed(false);
     } catch {
@@ -258,6 +287,31 @@ export default function ContactPage() {
             </select>
           </div>
 
+          {/* Preferred Platform（必須チェックボックス群） */}
+          <div className={styles.row}>
+            <span className={styles.label}>
+              Preferred Platform for the Lesson <span aria-hidden="true">*</span>
+            </span>
+            <div className={styles.inlineChecks} role="group" aria-label="Preferred Platform for the Lesson">
+              {PLATFORM_OPTIONS.map((opt) => {
+                const id = `platform-${opt.value.replace(/\s+/g, '-').toLowerCase()}`;
+                const checked = form.preferredPlatforms.includes(opt.value);
+                return (
+                  <label key={opt.value} htmlFor={id} className={styles.checkboxLabel}>
+                    <input
+                      id={id}
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => onTogglePlatform(opt.value)}
+                      required={form.preferredPlatforms.length === 0}
+                    />
+                    {opt.label}
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Preferred Date & Time (1st~3rd) — only 1st required */}
           {[1, 2, 3].map((n) => (
             <div className={styles.row} key={n}>
@@ -307,10 +361,7 @@ export default function ContactPage() {
 
           {/* Privacy Policy Agreement (required) */}
           <div className={styles.row}>
-            {/* 左カラムは空ラベルで揃え */}
             <label className={styles.label} htmlFor="agree"></label>
-
-            {/* 右カラム */}
             <label
               htmlFor="agree"
               className={styles.checkboxLabel}
@@ -325,7 +376,7 @@ export default function ContactPage() {
                 aria-required="true"
               />
               <span>
-                I agree to the{" "}
+                I agree to the{' '}
                 <a
                   href="/privacy-policy"
                   target="_blank"
@@ -337,8 +388,6 @@ export default function ContactPage() {
               </span>
             </label>
           </div>
-
-
 
           <div className={styles.actions}>
             <button className={styles.button} type="submit" disabled={submitting}>

@@ -73,6 +73,7 @@ export default function AboutCEO({
             className={`${styles.photo} ${styles.reveal}`}
             src={imageSrc}
             alt={imageAlt}
+            loading="lazy"
             // テキストの後に写真がくっきり
             style={{ transitionDelay: `${120 + points.length * 80 + 120}ms` }}
           />

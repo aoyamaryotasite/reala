@@ -12,17 +12,30 @@ type Slide = { img: string; title: string; sub?: string; body: string };
 
 export default function PlanLock({ slides }: { slides: Slide[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null); // ★ 固定タイトル
   const [isMobile, setIsMobile] = useState(false);
 
-  // ===== モバイル判定 =====
+  // ===== モバイル判定（PC→モバイル切替前に pin を解除） =====
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    const handleResize = () => {
+      const nextIsMobile = window.innerWidth <= 768;
+
+      // PC -> モバイルへ切替の瞬間に既存の ScrollTrigger を kill（DOM が消える前）
+      if (nextIsMobile && !isMobile) {
+        ScrollTrigger.getById("planLock")?.kill();
+        if (titleRef.current) titleRef.current.classList.remove(styles.show);
+      }
+
+      setIsMobile(nextIsMobile);
+    };
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile]);
 
-  // ===== PC用（そのまま） =====
+  // ===== PC用（重ねて切替＋固定タイトル表示） =====
   useEffect(() => {
     if (isMobile || !containerRef.current) return;
 
@@ -38,6 +51,7 @@ export default function PlanLock({ slides }: { slides: Slide[] }) {
 
       let lastIndex = 0;
       const st = ScrollTrigger.create({
+        id: "planLock",
         trigger: containerRef.current,
         start: "top top",
         end: () => `+=${(slides.length - 1) * window.innerHeight + 2}`,
@@ -55,7 +69,18 @@ export default function PlanLock({ slides }: { slides: Slide[] }) {
           );
           if (idx !== lastIndex) switchTo(idx);
         },
+        onToggle(self) {
+          // ★ pin区間に入っている間だけ固定PLANを表示
+          if (titleRef.current) {
+            titleRef.current.classList.toggle(styles.show, self.isActive);
+          }
+        },
       });
+
+      // 作成直後に表示状態を同期
+      if (titleRef.current) {
+        titleRef.current.classList.toggle(styles.show, st.isActive);
+      }
 
       function switchTo(index: number) {
         const panels = gsap.utils.toArray<HTMLElement>(`.${styles.slide}`);
@@ -107,17 +132,20 @@ export default function PlanLock({ slides }: { slides: Slide[] }) {
       setTimeout(refresh, 0);
       switchTo(0);
 
+      // ★ ここでは st.kill() を呼ばない（ctx.revert が面倒見る）
       return () => {
         window.removeEventListener("load", refresh);
         window.removeEventListener("resize", refresh);
-        st.kill();
       };
     });
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert(); // GSAP/ScrollTrigger を一括解除
+      if (titleRef.current) titleRef.current.classList.remove(styles.show);
+    };
   }, [isMobile, slides.length]);
 
-  // ===== モバイル：縦積み＋ふわっと順表示（Observerで .in を付与） =====
+  // ===== モバイル：縦積み＋ふわっと順表示 =====
   const mobileRefs = useRef<HTMLDivElement[]>([]);
   mobileRefs.current = [];
 
@@ -127,13 +155,11 @@ export default function PlanLock({ slides }: { slides: Slide[] }) {
 
   useEffect(() => {
     if (!isMobile) return;
-
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const el = entry.target as HTMLDivElement;
           if (entry.isIntersecting) {
-            // 最初の表示時だけ .in を付与（連打防止のため一度付けたら監視解除）
             el.classList.add(styles.in);
             obs.unobserve(el);
           }
@@ -143,7 +169,6 @@ export default function PlanLock({ slides }: { slides: Slide[] }) {
     );
 
     mobileRefs.current.forEach((el, i) => {
-      // 軽いステップディレイ（0, 120ms, 240ms）
       el.style.setProperty("--delay", `${i * 120}ms`);
       obs.observe(el);
     });
@@ -151,28 +176,32 @@ export default function PlanLock({ slides }: { slides: Slide[] }) {
     return () => obs.disconnect();
   }, [isMobile, slides.length]);
 
+  // ===== レンダリング =====
   if (isMobile) {
     return (
-      <div className={styles.lockStage}>
-        {slides.map((slide, i) => (
-          <div
-            key={i}
-            ref={setMobileRef}
-            className={styles.mobileSlide} // ← 最初は .in を付けない
-          >
-            <PlanSlide slide={slide} show />
-          </div>
-        ))}
-      </div>
+      <>
+        <h2 className="plan-title">PLAN</h2>
+        <div className={styles.lockStage}>
+          {slides.map((slide, i) => (
+            <div key={i} ref={setMobileRef} className={styles.mobileSlide}>
+              <PlanSlide slide={slide} show />
+            </div>
+          ))}
+        </div>
+      </>
     );
   }
 
-  // ===== PC：重ねて切替 =====
+  // PC：固定タイトル（画面上部に常時表示）＋重ね切替
   return (
-    <div ref={containerRef} className={styles.lockStage}>
-      {slides.map((s, i) => (
-        <PlanSlide key={i} slide={s} />
-      ))}
-    </div>
+    <>
+      <div ref={containerRef} className={styles.lockStage}>
+        {/* こちらはセクション内の見出し（任意） */}
+        <h2 className="plan-title">PLAN</h2>
+        {slides.map((s, i) => (
+          <PlanSlide key={i} slide={s} />
+        ))}
+      </div>
+    </>
   );
 }

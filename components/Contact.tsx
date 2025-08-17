@@ -11,6 +11,7 @@ type FormState = {
   preferredDateTime2: string;
   preferredDateTime3: string;
   message: string;
+  preferredPlatforms: string[]; // ← 追加：チェックボックスの選択肢
 };
 
 type Option = { value: string; label: string };
@@ -46,6 +47,7 @@ const countryOptions: Option[] = [
   { value: 'Chile', label: 'Chile' },
   { value: 'Colombia', label: 'Colombia' },
   { value: 'Peru', label: 'Peru' },
+  { value: 'Other', label: 'Other' },
 ];
 
 // Time zones (English)
@@ -127,6 +129,13 @@ const timeOptions = Array.from({ length: 9 }, (_, i) => `${10 + i}:00`);
 // --- Debug switch ---
 const DEBUG = true;
 
+// チェックボックスの定義
+const PLATFORM_OPTIONS = [
+  { value: 'Zoom', label: 'Zoom' },
+  { value: 'Google Meet', label: 'Google Meet' },
+  { value: 'Either is fine', label: 'Either is fine' },
+] as const;
+
 export default function Contact() {
   const [form, setForm] = useState<FormState>({
     fullName: '',
@@ -137,15 +146,35 @@ export default function Contact() {
     preferredDateTime2: '',
     preferredDateTime3: '',
     message: '',
+    preferredPlatforms: [],
   });
 
   const [submitting, setSubmitting] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [agreed, setAgreed] = useState(false); // ← 追加
 
   const onChange =
     (key: keyof FormState) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-      setForm((p) => ({ ...p, [key]: e.target.value }));
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+        setForm((p) => ({ ...p, [key]: e.target.value }));
+
+  // チェックボックスの切り替え（Eitherは排他）
+  const onTogglePlatform = (value: string) => {
+    setForm((p) => {
+      const has = p.preferredPlatforms.includes(value);
+      let next = has
+        ? p.preferredPlatforms.filter((v) => v !== value)
+        : [...p.preferredPlatforms, value];
+
+      if (value === 'Either is fine' && !has) {
+        next = ['Either is fine'];
+      } else if (value !== 'Either is fine' && next.includes('Either is fine')) {
+        next = next.filter((v) => v !== 'Either is fine');
+      }
+
+      return { ...p, preferredPlatforms: next };
+    });
+  };
 
   const validate = () => {
     if (!form.fullName.trim()) return 'Full Name is required.';
@@ -153,6 +182,8 @@ export default function Contact() {
     if (!form.country) return 'Country is required.';
     if (!form.timeZone) return 'Time Zone is required.';
     if (!form.preferredDateTime1) return 'Preferred Date & Time (1st choice) is required.';
+    if (form.preferredPlatforms.length === 0) return 'Preferred Platform is required.';
+    if (!agreed) return 'You must agree to the Privacy Policy.'; // ← 追加
     return null;
   };
 
@@ -175,11 +206,11 @@ export default function Contact() {
       fullName: form.fullName.trim(),
       email: form.email.trim(),
       country: form.country,
-      timeZone: form.timeZone, // IANA ID
-      choices,                  // [{ date: "YYYY-MM-DD", time: "HH:MM" }, ...]
+      timeZone: form.timeZone,
+      choices,
+      preferredPlatforms: form.preferredPlatforms,
       message: form.message.trim() || '',
-      // For debugging: also include ISO suggestion (not sent if you remove it)
-      // isoPreview: choices.map(c => `${c.date}T${c.time}:00`)
+      agreed, // ← 追加（不要なら削除OK）
     };
   };
 
@@ -191,15 +222,11 @@ export default function Contact() {
 
     const payload = buildPayload();
 
-    // ---- DEBUG: log everything about to be sent ----
     if (DEBUG) {
       console.groupCollapsed('[Contact] Submitting payload');
       console.log('Payload object:', payload);
-      if (payload.choices?.length) {
-        console.table(payload.choices);
-      } else {
-        console.warn('No choices provided (only first is required).');
-      }
+      if (payload.choices?.length) console.table(payload.choices);
+      console.log('Preferred platforms:', payload.preferredPlatforms);
       console.groupEnd();
     }
 
@@ -215,7 +242,6 @@ export default function Contact() {
       if (DEBUG) console.log('Server response status:', res.status);
 
       if (!res.ok) {
-        // Try to read JSON error body first
         let serverMsg = '';
         try {
           const j = await res.json();
@@ -227,13 +253,11 @@ export default function Contact() {
         throw new Error(serverMsg || 'Request failed');
       }
 
-      // Optionally inspect success response
       if (DEBUG) {
         try {
           const data = await res.json();
           console.log('Success response JSON:', data);
         } catch {
-          // maybe no JSON body
           console.log('Success with no JSON body.');
         }
       }
@@ -248,7 +272,9 @@ export default function Contact() {
         preferredDateTime2: '',
         preferredDateTime3: '',
         message: '',
+        preferredPlatforms: [],
       });
+      setAgreed(false); // ← 追加
     } catch (e: any) {
       setNotice(e?.message || 'Sorry, something went wrong. Please try again later.');
     } finally {
@@ -322,7 +348,31 @@ export default function Contact() {
           </select>
         </div>
 
- 
+        {/* Preferred Platform（必須チェックボックス群） */}
+        <div className={styles.row}>
+          <span className={styles.label}>
+            Preferred Platform for the Lesson <span aria-hidden="true">*</span>
+          </span>
+          <div className={styles.inlineChecks} role="group" aria-label="Preferred Platform for the Lesson">
+            {PLATFORM_OPTIONS.map((opt) => {
+              const id = `platform-${opt.value.replace(/\s+/g, '-').toLowerCase()}`;
+              const checked = form.preferredPlatforms.includes(opt.value);
+              return (
+                <label key={opt.value} htmlFor={id} className={styles.checkboxLabel}>
+                  <input
+                    id={id}
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => onTogglePlatform(opt.value)}
+                    required={form.preferredPlatforms.length === 0}
+                  />
+                  {opt.label}
+                </label>
+              );
+            })}
+          </div>
+        </div>
+
         {[1, 2, 3].map((n) => (
           <div className={styles.row} key={n}>
             <label className={styles.label}>
@@ -371,6 +421,36 @@ export default function Contact() {
           />
         </div>
 
+        {/* Privacy Policy Agreement (required) */}
+        <div className={styles.row}>
+          <label className={styles.label} htmlFor="agree"></label>
+          <label
+            htmlFor="agree"
+            className={styles.checkboxLabel}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+          >
+            <input
+              id="agree"
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              required
+              aria-required="true"
+            />
+            <span>
+              I agree to the{' '}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.privacyLink}
+              >
+                Privacy Policy
+              </a>.
+            </span>
+          </label>
+        </div>
+
         <div className={styles.actions}>
           <button className={styles.button} type="submit" disabled={submitting}>
             {submitting ? 'Sending…' : 'Submit'}
@@ -379,8 +459,6 @@ export default function Contact() {
 
         {notice && <p className={styles.notice}>{notice}</p>}
       </form>
-
-
     </section>
   );
 }

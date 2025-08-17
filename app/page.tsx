@@ -183,7 +183,7 @@ export default function Page() {
         <Goals />
         <Tutor />
         <Who />
-       <h2 className="plan-title">PLAN</h2>
+   
 
         <PlanLock
           slides={[
