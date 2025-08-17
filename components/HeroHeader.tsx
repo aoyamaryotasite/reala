@@ -84,8 +84,9 @@ export default function HeroHeader() {
           <div className={styles.snsCol}>
             <p className={styles.colTtl}>SNS</p>
             <div className={styles.snsRow}>
-              <a href="#" aria-label="Instagram" onClick={closeMenu}><Wavy text="IG" /></a>
-              <a href="#" aria-label="TikTok" onClick={closeMenu}><Wavy text="TK" /></a>
+              <p>COMMING SOON</p>
+              {/* <a href="#" aria-label="Instagram" onClick={closeMenu}><Wavy text="IG" /></a>
+              <a href="#" aria-label="TikTok" onClick={closeMenu}><Wavy text="TK" /></a> */}
             </div>
           </div>
         </div>

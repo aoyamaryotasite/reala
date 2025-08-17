@@ -5,6 +5,7 @@ import Script from "next/script";
 import { cookies } from "next/headers";
 
 
+
 const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -100,7 +101,6 @@ export default async function RootLayout({
           `}
         </Script>
         {/* --- end GA4 --- */}
-
         {children}
       </body>
     </html>

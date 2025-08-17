@@ -8,10 +8,7 @@
   opacity: 0;
   filter: blur(12px);
   transform: translateY(10px);
-  transition:
-    opacity 700ms ease,
-    filter 900ms ease,
-    transform 700ms ease;
+  transition: opacity 700ms ease, filter 900ms ease, transform 700ms ease;
   will-change: opacity, filter, transform;
 }
 .isIn .reveal {
@@ -106,18 +103,20 @@
     width: 103%;
     height: 89%;
     top: 6%;
-    left: -4%;
+    left: 0%;
   }
   .photoPane {
     justify-self: center;
     margin-top: 16px;
     top: -33rem;
     right: -9px;
+    grid-column: 2;
   }
   .photo {
     width: min(520px, 92vw);
   }
   .textPane {
-  top: 100%;
-}
+    top: 80%;
+    grid-column: 2;
+  }
 }

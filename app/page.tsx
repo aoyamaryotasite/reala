@@ -5,6 +5,8 @@ import "scroll-hint/css/scroll-hint.css";
 
 
 import PageLoader from "../components/PageLoader";
+import FloatingTrialCTA from "../components/FloatingTrialCTA";
+
 
 import Hero from "../components/Hero";
 import Goals from "../components/Goals";
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
   description:
     "Take personalized Japanese lessons online. Choose 25 or 50 minutes. English support available. Free talk, textbook-based study, JLPT prep, and short-term intensive plans.",
   alternates: {
-    canonical: "https://www.example.com/",
+    canonical: "http://reala-academy.com/",
   },
 };
 
@@ -181,6 +183,8 @@ export default function Page() {
         <Goals />
         <Tutor />
         <Who />
+       <h2 className="plan-title">PLAN</h2>
+
         <PlanLock
           slides={[
             {
@@ -218,7 +222,13 @@ export default function Page() {
         />
         <Faq />
         <Contact />
-         <Footer />
+        <FloatingTrialCTA
+          href="/trial"
+          label="Start Free Trial"   // お好みで “Try it free” などに変更OK
+          showOnMobile={true}        // モバイルでもラベル表示したい場合
+        />
+
+        <Footer />
       </main>
     </PageLoader>
   );

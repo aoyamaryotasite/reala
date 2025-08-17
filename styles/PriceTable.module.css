@@ -70,6 +70,12 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+.highlightRow {
+  border: 2px solid #f39c12;
+  background: #fff8e6;
+  font-size: 2rem;
+  box-shadow: 0 0 12px rgba(243, 156, 18, 0.4);
+}
 
 @media (max-width: 768px) {
   .headerRow,
@@ -113,5 +119,8 @@
   .headerRow {
     min-width: 600px; /* ← スマホ幅より大きく */
     vertical-align: top;
+  }
+  .highlightRow {
+    height: 80px;
   }
 }

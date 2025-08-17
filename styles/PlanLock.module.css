@@ -93,6 +93,14 @@
   line-height: 1.85;
   font-size: clamp(0.98rem, 0.4vw + 0.9rem, 1.075rem);
 }
+.title{
+      text-align: center;
+    letter-spacing: .14em;
+    color: #000;
+    margin: -10px 0 28px;
+    font-size: max(28px, min(3.5vw, 42px));
+    font-weight: 600;
+}
 
 /* 左→右にめくる */
 @keyframes wipeL {
@@ -116,7 +124,7 @@
 
 @media (max-width: 768px) {
   .lockStage {
-    padding-top: 27rem!important;
+    padding-top: 0rem!important;
     position: static !important;
     height: auto !important;
     min-height: 0 !important;

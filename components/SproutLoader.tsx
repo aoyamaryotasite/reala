@@ -64,7 +64,7 @@ export default function SproutLoader({
           <g transform="translate(50,22)">
             <path
               className="stem"
-              d="M0,36 C 0,22 0,10 0,0"
+              d="M0,17 C 0,22 0,10 0,0"
               fill="none"
               stroke="var(--sprout-secondary)"
               strokeWidth="3.6"

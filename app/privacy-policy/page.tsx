@@ -194,26 +194,31 @@ export default function PrivacyPolicy() {
       <style jsx>{`
         .container {
           max-width: 800px;
-          margin: 40px auto;
+          margin: 140px auto;
           padding: 20px;
           font-family: Arial, sans-serif;
           line-height: 1.6;
+          color:#373737;
         }
         h1 {
           font-size: 28px;
           margin-bottom: 20px;
+           color:#373737;
         }
         h2 {
           font-size: 20px;
           margin-top: 30px;
           margin-bottom: 10px;
+           color:#373737;
         }
         ul {
           margin-left: 20px;
           list-style: disc;
+           color:#373737;
         }
         p {
           margin-bottom: 15px;
+           color:#373737;
         }
       `}</style>
          <Footer />

@@ -1,21 +1,20 @@
 .wrap {
   position: relative;
   background: #285f65;
-  padding: 5rem 1.5rem 2rem;
+  padding: 6.5rem 1.5rem 2rem;
   margin: 0 auto;
 }
 
 .topbar {
-  padding: 4px 0;
-
   background-color: #f0eae2;
   width: 100%;
   position: fixed;
   z-index: 999;
+  height: 75px;
 }
 .inner {
-  max-width: 1420px;
   width: 100%;
+  height: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -26,6 +25,7 @@
   color: #000;
   letter-spacing: 0.02em;
   display: flex;
+  margin-left: 10px;
   font-size: 1.3rem;
 }
 .brandSub {
@@ -39,6 +39,7 @@
   align-items: center;
   gap: 12px;
   position: relative;
+  height: 50px;
 }
 
 /* ===== ハンバーガー ===== */
@@ -69,7 +70,7 @@
 
 .menuBar {
   width: 20px;
-  height: 2px;
+  height: 1px;
   background: #222;
   border-radius: 2px;
   display: block;
@@ -97,11 +98,10 @@
   z-index: 9;
   text-align: center;
   background: #373737;
-  width: 100%;
-  max-width: 186px;
+width: 200px;
   padding: 0.5rem 0.8rem;
-  font-size: 1rem;
-  height: 100%;
+  font-size: 2rem;
+  height: 75px;
   font-weight: 700;
   text-decoration: none;
   display: flex;
@@ -134,8 +134,8 @@
 
 /* 左のメールアイコン（SVGをマスクして currentColor で着色） */
 .iconImg {
-  width: 18px;
-  height: 18px;
+    width: 29px;
+    height: 25px;
   display: inline-block;
 }
 
@@ -461,6 +461,8 @@ font-size: max(18px, min(11.6vw, 34px));
   aspect-ratio: 16 / 10; /* 好みで固定比率 */
   overflow: hidden;
   flex: 0 0 auto;
+    transform: translate3d(0, var(--parY, 0px), 0);
+  transition: transform .12s linear;
 }
 
 /* Next/Image に任せる。object-fit だけ指定 */
@@ -493,6 +495,10 @@ font-size: max(18px, min(11.6vw, 34px));
 }
 
 @media (max-width: 768px) {
+  .applyBtn{
+    width: 180px;
+  }
+
   .slide {
     --cardW: 100vw;
     height: 80%;

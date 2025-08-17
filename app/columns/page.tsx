@@ -30,7 +30,7 @@ export default async function ColumnsPage({
     limit: PER_PAGE,
     offset,
     orders: "-publishedAt",
-    fields: "id,title,slug,excerpt,eyecatch,category,publishedAt",
+    fields: "id,title,slug,excerpt,eyecatch,category,publishedAt,revisedAt",
     ...(q ? { q } : {}),
   });
 
@@ -97,6 +97,21 @@ export default async function ColumnsPage({
                           {post.category.name}
                         </p>
                       )}
+
+                      {/* 投稿日と更新日 */}
+                      <p style={{ margin: "4px 0 0", fontSize: 12, color: "#888" }}>
+                       Published:{" "}
+                        {new Date(post.publishedAt).toLocaleDateString("ja-JP")}
+                        {post.revisedAt &&
+                          post.revisedAt !== post.publishedAt && (
+                            <>
+                              {" "}
+                              （Updated:{" "}
+                              {new Date(post.revisedAt).toLocaleDateString("ja-JP")}
+                              ）
+                            </>
+                          )}
+                      </p>
                     </div>
                   </article>
                 </li>

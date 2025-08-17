@@ -27,9 +27,21 @@ a {
   color: inherit;
   text-decoration: none;
 }
+.plan-title {
+  font-size: max(28px, min(3.5vw, 42px));
+  color: #373737;
+  margin-bottom: 50px;
+  text-align: center;
+}
 
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+@media (max-width: 768px) {
+  .plan-title {
+    margin-top: 27rem;
   }
 }

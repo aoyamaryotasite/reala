@@ -1,16 +1,14 @@
 // app/columns/category/[category]/page.tsx
-// ★ PageProps の import は削除
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../page.module.css";
 import ColumnSidebar from "../../../../components/ColumnSidebar";
 import Footer from "../../../../components/Footer";
 import HeroHeader from "../../../../components/HeroHeader";
-import { getColumns } from "../../../../lib/microcms";
+import { getColumns, client } from "../../../../lib/microcms"; // client を使ってカテゴリ取得
 
 export const revalidate = 300;
 
-// Promise で受け取る引数の型を自前定義
 type ParamsPromise<T extends Record<string, string>> = Promise<T>;
 type SearchParamsPromise<T extends Record<string, string | undefined>> = Promise<T>;
 
@@ -21,8 +19,38 @@ export default async function CategoryPage({
   params: ParamsPromise<{ category: string }>;
   searchParams: SearchParamsPromise<{ page?: string; q?: string }>;
 }) {
-  const { category } = await params;       // ← 必須（Next 15）
-  const sp = await searchParams;           // ← 必須（Next 15）
+  const { category: categorySlug } = await params;
+  const sp = await searchParams;
+
+  // ① slug からカテゴリ（ID）を取得
+  const catRes = await client.get({
+    endpoint: "categories", // ← あなたのカテゴリのAPI名に合わせて
+    queries: {
+      filters: `slug[equals]${categorySlug}`,
+      limit: 1,
+      fields: "id,name,slug",
+    },
+  });
+  const activeCategory = catRes.contents?.[0];
+
+  if (!activeCategory) {
+    // slug が存在しないときは 404
+    // notFound() を使う場合は next/navigation から import
+    // return notFound();
+    return (
+      <>
+        <HeroHeader />
+        <div className={styles.container}>
+          <main className={styles.main}>
+            <h1>Category not found</h1>
+            <p>指定のカテゴリが見つかりませんでした（{categorySlug}）。</p>
+          </main>
+          <ColumnSidebar />
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   const PER_PAGE = 10;
   const pageNum = Number(sp?.page ?? "1");
@@ -30,13 +58,13 @@ export default async function CategoryPage({
   const q = sp?.q?.trim() || undefined;
   const offset = (page - 1) * PER_PAGE;
 
+  // ② 記事は「カテゴリID」でフィルター
   const { contents, totalCount } = await getColumns({
     limit: PER_PAGE,
     offset,
     orders: "-publishedAt",
     fields: "id,title,slug,excerpt,eyecatch,category,publishedAt",
-    // category が slug の場合の例。IDなら equals を ID に変更してください。
-    filters: `category[equals]${category}`,
+    filters: `category[equals]${activeCategory.id}`,
     ...(q ? { q } : {}),
   });
 
@@ -48,7 +76,7 @@ export default async function CategoryPage({
       <div className={styles.container}>
         <main className={styles.main}>
           <h1 style={{ fontSize: 28, marginBottom: 12 }}>
-            Category: {category}
+            Category: {activeCategory.name}
           </h1>
           {q && <p>Search results for: <strong>{q}</strong></p>}
           {totalCount === 0 && <p>No posts yet.</p>}
@@ -92,7 +120,7 @@ export default async function CategoryPage({
           <div style={{ display: "flex", gap: 12, marginTop: 20, alignItems: "center" }}>
             {page > 1 && (
               <Link
-                href={`/columns/category/${category}?${new URLSearchParams({
+                href={`/columns/category/${categorySlug}?${new URLSearchParams({
                   ...(q ? { q } : {}),
                   page: String(page - 1),
                 }).toString()}`}
@@ -103,7 +131,7 @@ export default async function CategoryPage({
             <span>Page {page} / {totalPages}</span>
             {page < totalPages && (
               <Link
-                href={`/columns/category/${category}?${new URLSearchParams({
+                href={`/columns/category/${categorySlug}?${new URLSearchParams({
                   ...(q ? { q } : {}),
                   page: String(page + 1),
                 }).toString()}`}

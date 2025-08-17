@@ -1,6 +1,6 @@
 .container {
   width: min(1100px, 92vw);
-  margin: 64px auto;
+  margin: 140px auto;
   display: grid;
   grid-template-columns: 1fr 320px; /* 本文 / サイドバー */
   gap: 32px;
@@ -111,6 +111,7 @@
 }
 .searchInput {
   flex: 1;
+  background-color: #fff;
   height: 38px;
   padding: 0 10px;
   border: 1px solid #d8dee3;

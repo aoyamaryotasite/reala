@@ -10,10 +10,11 @@ type Plan = {
   priceJPY: string;
   priceUSD: string;
   isAlt?: boolean;
+  isHighlight?: boolean;
 };
 
 const plansNoFee: Plan[] = [
-  { name: "Trial Lesson", priceJPY: "¥2,000", priceUSD: "$14" },
+  { name: "Trial Lesson", priceJPY: "¥0", priceUSD: "$0", isHighlight: true }, // ← 追加
   { name: "Spot Lesson", priceJPY: "¥4,700", priceUSD: "$32", isAlt: true },
   { name: "Intensive Study Pack (5)", priceJPY: "¥22,000", priceUSD: "$150" },
   { name: "Intensive Study Pack (10)", priceJPY: "¥43,000", priceUSD: "$292", isAlt: true },
@@ -22,7 +23,7 @@ const plansNoFee: Plan[] = [
 ];
 
 const plansWithFee: Plan[] = [
-  { name: "Trial Lesson", priceJPY: "¥2,134", priceUSD: "$15" },
+  { name: "Trial Lesson", priceJPY: "¥0", priceUSD: "$0", isHighlight: true }, // ← 追加
   { name: "Spot Lesson", priceJPY: "¥4,907", priceUSD: "$34", isAlt: true },
   { name: "Intensive Study Pack (5)", priceJPY: "¥23,016", priceUSD: "$157" },
   { name: "Intensive Study Pack (10)", priceJPY: "¥44,936", priceUSD: "$305", isAlt: true },
@@ -46,7 +47,7 @@ function PriceTableBlock({ title, plans }: { title: string; plans: Plan[] }) {
           {plans.map((p, i) => (
             <div
               key={i}
-              className={`${styles.row} ${p.isAlt ? styles.rowAlt : ""}`}
+              className={`${styles.row} ${p.isAlt ? styles.rowAlt : ""} ${p.isHighlight ? styles.highlightRow : ""}`}
               role="row"
             >
               <div className={`${styles.cell} ${styles.cellLabel}`} role="cell">{p.name}</div>
@@ -60,18 +61,18 @@ function PriceTableBlock({ title, plans }: { title: string; plans: Plan[] }) {
   );
 }
 
-    export default function PriceTable() {
-      useEffect(() => {
-        if (window.innerWidth <= 768) {
-          // 描画後に実行
-          setTimeout(() => {
+export default function PriceTable() {
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      // 描画後に実行
+      setTimeout(() => {
         new ScrollHint(".tableScroll", {
-      suggestiveShadow: true,
-      remainingTime: 3000 as any, // ← 型エラー回避
-      i18n: {
-        scrollable: "Scroll →"
-      }
-    });
+          suggestiveShadow: true,
+          remainingTime: 3000 as any, // ← 型エラー回避
+          i18n: {
+            scrollable: "Scroll →"
+          }
+        });
       }, 0);
     }
   }, []);
