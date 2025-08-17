@@ -58,13 +58,7 @@ export default async function ColumnsPage({
                   key={post.id}
                   style={{ padding: "16px 0", borderBottom: "1px solid #eee" }}
                 >
-                  <article
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "160px 1fr",
-                      gap: 16,
-                    }}
-                  >
+                  <article className={styles.article}>
                     {post.eyecatch && (
                       <Link href={href}>
                         <Image
@@ -74,6 +68,7 @@ export default async function ColumnsPage({
                           height={Math.round(
                             160 * (post.eyecatch.height / post.eyecatch.width)
                           )}
+                          style={{ width: "100%", height: "auto" }} // スマホ時に横幅合わせ
                         />
                       </Link>
                     )}
@@ -82,9 +77,7 @@ export default async function ColumnsPage({
                         <Link href={href}>{post.title}</Link>
                       </h2>
                       {post.excerpt && (
-                        <p style={{ margin: 0, color: "#4b5a63" }}>
-                          {post.excerpt}
-                        </p>
+                        <p style={{ margin: 0, color: "#4b5a63" }}>{post.excerpt}</p>
                       )}
                       {post.category && (
                         <p
@@ -100,7 +93,7 @@ export default async function ColumnsPage({
 
                       {/* 投稿日と更新日 */}
                       <p style={{ margin: "4px 0 0", fontSize: 12, color: "#888" }}>
-                       Published:{" "}
+                        Published:{" "}
                         {new Date(post.publishedAt).toLocaleDateString("ja-JP")}
                         {post.revisedAt &&
                           post.revisedAt !== post.publishedAt && (

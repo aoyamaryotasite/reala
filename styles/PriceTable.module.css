@@ -78,6 +78,9 @@
 }
 
 @media (max-width: 768px) {
+  .cell {
+    padding: 16px;
+  }
   .headerRow,
   .row {
     grid-template-columns: 1fr 1fr 1fr; /* モバイルでは2列 */

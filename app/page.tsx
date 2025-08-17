@@ -223,7 +223,7 @@ export default function Page() {
         <Faq />
         <Contact />
         <FloatingTrialCTA
-          href="/trial"
+          href="/signup"
           label="Start Free Trial"   // お好みで “Try it free” などに変更OK
           showOnMobile={true}        // モバイルでもラベル表示したい場合
         />
