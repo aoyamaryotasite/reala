@@ -1,105 +1,142 @@
-
-
+// /app/api/contact/route.ts
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 export const runtime = 'nodejs';
 
+// --- util ---
 function need(name: string) {
   const v = process.env[name];
   if (!v) throw new Error(`Missing env: ${name}`);
   return v;
 }
 
+// "YYYY-MM-DD HH:MM" / "YYYY-MM-DDTHH:MM" / その他を安全に分割
+function splitDateTime(input: string | undefined | null) {
+  if (!input) return null;
+  const s = String(input).trim();
+  if (!s) return null;
+  const sep = s.includes('T') ? 'T' : ' ';
+  const [date, timeRaw] = s.split(sep);
+  const time = (timeRaw || '').slice(0, 5); // HH:MM まで
+  if (!date || !time) return null;
+  return { date, time };
+}
+
 export async function POST(req: Request) {
-    console.log("RESEND_API_KEY:", process.env.RESEND_API_KEY);
-  console.log("CONTACT_TO:", process.env.CONTACT_TO);
+  // --- Debug envs（本番は削除推奨） ---
+  console.log('[contact] RESEND_API_KEY set:', !!process.env.RESEND_API_KEY);
+  console.log('[contact] CONTACT_TO:', process.env.CONTACT_TO);
+
   try {
-    const b = await req.json().catch(() => ({}));
+    const body = await req.json().catch(() => ({}));
+    console.log('[contact] raw body:', body);
 
-    // 必須項目チェック（フォーム仕様に合わせて変更）
-    const requiredFields = [
-      'fullName',
-      'email',
-      'country',
-      'japaneseLevel',
-      'learningPurpose',
-      'preferredDateTime1'
-    ] as const;
+    // フロントから choices 配列で来ても、旧キー（preferredDateTime1~3）でもOKにする
+    let choices: Array<{ date: string; time: string }> = [];
 
-    for (const k of requiredFields) {
-      if (!b?.[k]?.toString()?.trim()) {
+    if (Array.isArray(body.choices)) {
+      choices = body.choices
+        .map((c: any) => (c?.date && c?.time ? { date: String(c.date), time: String(c.time) } : null))
+        .filter(Boolean) as Array<{ date: string; time: string }>;
+    } else {
+      const c1 = splitDateTime(body.preferredDateTime1);
+      const c2 = splitDateTime(body.preferredDateTime2);
+      const c3 = splitDateTime(body.preferredDateTime3);
+      choices = [c1, c2, c3].filter(Boolean) as Array<{ date: string; time: string }>;
+    }
+
+    // ---- 必須フィールド検証（Purpose / japaneseLevel / learningHistory は不要）----
+    const required = {
+      fullName: String(body.fullName || '').trim(),
+      email: String(body.email || '').trim(),
+      country: String(body.country || '').trim(),
+      timeZone: String(body.timeZone || '').trim(), // IANA想定
+    };
+
+    for (const [k, v] of Object.entries(required)) {
+      if (!v) {
         return NextResponse.json({ ok: false, error: `Missing field: ${k}` }, { status: 400 });
       }
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)) {
+    // メール形式
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(required.email)) {
       return NextResponse.json({ ok: false, error: 'Invalid email' }, { status: 400 });
     }
 
+    // 希望日時は最低1件
+    if (!choices.length) {
+      return NextResponse.json({ ok: false, error: 'At least one preferred date/time is required' }, { status: 400 });
+    }
+
+    // 任意
+    const message = (body.message ?? body.otherMessage ?? '').toString();
+
+    // ---- 送信用本文（不要項目は一切含めない）----
+    const lines = [
+      `New trial lesson inquiry`,
+      `--------------------------------`,
+      `Full Name: ${required.fullName}`,
+      `Email: ${required.email}`,
+      `Country: ${required.country}`,
+      `Time Zone: ${required.timeZone}`,
+      `Preferred Date & Time:`,
+      ...choices.map((c, i) => `  ${i + 1}) ${c.date} ${c.time}`),
+      ``,
+      `Message:`,
+      message || '(none)',
+    ];
+    const text = lines.join('\n');
+
+    // ---- Resend ----
     const resend = new Resend(need('RESEND_API_KEY'));
     const to = need('CONTACT_TO');
-    const from = process.env.CONTACT_FROM?.trim() || 'Your Site <onboarding@resend.dev>';
+    const from = (process.env.CONTACT_FROM || 'Your Site <onboarding@resend.dev>').trim();
+    const subject = `New inquiry from ${required.fullName}`;
 
-    const subject = `WEBサイトから新しい問い合わせが ${b.fullName}さんからありました`;
-
-    // メール本文にすべての項目を整形して入れる
-    const text = [
-      `Full Name: ${b.fullName}`,
-      `Email: ${b.email}`,
-      `Country/Timezone: ${b.country}`,
-      `Japanese Level: ${b.japaneseLevel}`,
-      `Learning Purpose: ${b.learningPurpose}`,
-      `Preferred Date & Time (1st): ${b.preferredDateTime1}`,
-      `Preferred Date & Time (2nd): ${b.preferredDateTime2 || '-'}`,
-      `Preferred Date & Time (3rd): ${b.preferredDateTime3 || '-'}`,
-      `Learning History: ${b.learningHistory || '-'}`,
-      `Other Message: ${b.otherMessage || '-'}`
-    ].join('\n');
-
-    // 管理者宛メール
+    // 管理者宛
     const r1 = await resend.emails.send({
       from,
       to,
-       cc: "aoyamaryota.web@gmail.com",
-      replyTo: b.email,
+      cc: process.env.CONTACT_CC || undefined,
+      replyTo: required.email,
       subject,
       text,
     });
+    console.log('[contact] resend admin result:', r1);
 
-     console.log('Resend admin mail response:', r1);
+    // 自動返信（ユーザー宛）
+    const autoText = `Hi ${required.fullName},
 
-    // 自動返信
-  const r2 = await resend.emails.send({
-  from,
-  to: b.email,
-  subject: 'Thank you for your trial lesson inquiry',
-  text: `Hi ${b.fullName},
+Thank you for your trial lesson inquiry!
+We have received your details:
 
-Thank you for your interest in our trial lesson!
-We have received your inquiry with the following details:
+- Name: ${required.fullName}
+- Email: ${required.email}
+- Country: ${required.country}
+- Time Zone: ${required.timeZone}
 
-- Name: ${b.fullName}
-- Email: ${b.email}
-- Country/Timezone: ${b.country}
-- Japanese Level: ${b.japaneseLevel}
-- Learning Purpose: ${b.learningPurpose}
-- Preferred Date & Time (1st): ${b.preferredDateTime1}
-- Preferred Date & Time (2nd): ${b.preferredDateTime2 || '-'}
-- Preferred Date & Time (3rd): ${b.preferredDateTime3 || '-'}
-- Learning History: ${b.learningHistory || '-'}
-- Other Message: ${b.otherMessage || '-'}
+Preferred Date & Time:
+${choices.map((c, i) => `  ${i + 1}) ${c.date} ${c.time}`).join('\n')}
+
+Message:
+${message || '(none)'}
 
 We will contact you shortly to confirm the schedule.
 
 Best regards,
 Reala Academy Team
-`,
-});
+`;
+    const r2 = await resend.emails.send({
+      from,
+      to: required.email,
+      subject: 'Thank you for your trial lesson inquiry',
+      text: autoText,
+    });
+    console.log('[contact] resend autoreply result:', r2);
 
-    console.log('Resend auto-reply response:', r2);
-
-    return NextResponse.json({ ok: true, r1, r2 }, { status: 200 });
+    return NextResponse.json({ ok: true }, { status: 200 });
   } catch (err: any) {
     console.error('[/api/contact] ERROR:', err?.message || err, err);
     return NextResponse.json(
