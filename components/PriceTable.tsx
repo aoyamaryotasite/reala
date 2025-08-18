@@ -18,8 +18,8 @@ const plansNoFee: Plan[] = [
   { name: "Spot Lesson", priceJPY: "¥4,700", priceUSD: "$32", isAlt: true },
   { name: "Intensive Study Pack (5)", priceJPY: "¥22,000", priceUSD: "$150" },
   { name: "Intensive Study Pack (10)", priceJPY: "¥43,000", priceUSD: "$292", isAlt: true },
-  { name: "Weekly Plan", priceJPY: "¥16,800", priceUSD: "$114" },
-  { name: "Standard Plan", priceJPY: "¥32,000", priceUSD: "$217", isAlt: true },
+  { name: "Weekly Plan(4 per month)", priceJPY: "¥16,800", priceUSD: "$114" },
+  { name: "Standard Plan(8 per month)", priceJPY: "¥32,000", priceUSD: "$217", isAlt: true },
 ];
 
 const plansWithFee: Plan[] = [
@@ -27,8 +27,8 @@ const plansWithFee: Plan[] = [
   { name: "Spot Lesson", priceJPY: "¥4,907", priceUSD: "$34", isAlt: true },
   { name: "Intensive Study Pack (5)", priceJPY: "¥23,016", priceUSD: "$157" },
   { name: "Intensive Study Pack (10)", priceJPY: "¥44,936", priceUSD: "$305", isAlt: true },
-  { name: "Weekly Plan", priceJPY: "¥17,537", priceUSD: "$119" },
-  { name: "Standard Plan", priceJPY: "¥33,409", priceUSD: "$227", isAlt: true },
+  { name: "Weekly Plan(4 per month)", priceJPY: "¥17,537", priceUSD: "$119" },
+  { name: "Standard Plan(8 per month)", priceJPY: "¥33,409", priceUSD: "$227", isAlt: true },
 ];
 
 function PriceTableBlock({ title, plans }: { title: string; plans: Plan[] }) {

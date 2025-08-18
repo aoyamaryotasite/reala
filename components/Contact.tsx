@@ -123,8 +123,10 @@ const timeZoneOptions: Option[] = [
   { value: 'UTC', label: 'UTC (Coordinated Universal Time, UTC±0)' },
 ];
 
-// Lesson time options (10:00–18:00)
-const timeOptions = Array.from({ length: 9 }, (_, i) => `${10 + i}:00`);
+// Lesson time options (00:00–23:00)
+const timeOptions = Array.from({ length: 24 }, (_, i) => 
+  `${String(i).padStart(2, '0')}:00`
+);
 
 // --- Debug switch ---
 const DEBUG = true;
