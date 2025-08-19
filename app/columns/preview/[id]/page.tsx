@@ -11,20 +11,21 @@ import { getColumnById } from "../../../../lib/microcms";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-// ← /columns/[slug] と同じ方針で Promise を明示
-type ParamsPromise<T extends Record<string, string>> = Promise<T>;
+// Next の型生成に合わせて params / searchParams を Promise で受ける
+type ParamsPromise<T extends Record<string, string | undefined>> = Promise<T>;
 
 type PageProps = {
   params: ParamsPromise<{ id: string }>;
-  searchParams?: { draftKey?: string };
+  searchParams: ParamsPromise<{ draftKey?: string }>;
 };
 
 export async function generateMetadata(
   { params, searchParams }: PageProps,
   _parent?: ResolvingMetadata
 ): Promise<Metadata> {
-  const { id } = await params;                  // ← await が必須
-  const post = await getColumnById(id, searchParams?.draftKey);
+  const { id } = await params;                         // ← await 必須
+  const { draftKey } = await searchParams;             // ← await 必須
+  const post = await getColumnById(id, draftKey);
   if (!post) return {};
   const ogImg = post.eyecatch?.url ?? "/og/og-image.jpg";
   return {
@@ -35,8 +36,9 @@ export async function generateMetadata(
 }
 
 export default async function Page({ params, searchParams }: PageProps) {
-  const { id } = await params;                  // ← await
-  const post = await getColumnById(id, searchParams?.draftKey);
+  const { id } = await params;                         // ← await 必須
+  const { draftKey } = await searchParams;             // ← await 必須
+  const post = await getColumnById(id, draftKey);
   if (!post) notFound();
 
   return (
