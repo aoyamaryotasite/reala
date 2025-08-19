@@ -52,3 +52,18 @@ export async function getColumnBySlug(slugOrId: string) {
   // コンテンツID=スラッグで運用しているケース
   return client.getListDetail<Column>({ endpoint: COL_ENDPOINT, contentId: slugOrId });
 }
+
+/** id で1件取得（draftKey対応） */
+export async function getColumnById(id: string, draftKey?: string) {
+  // microcms-js-sdk は queries で draftKey を渡せる
+  const queries: MicroCMSQueries = draftKey ? { draftKey } : {};
+  try {
+    return await client.getListDetail<Column>({
+      endpoint: COL_ENDPOINT,
+      contentId: id,
+      queries,
+    });
+  } catch {
+    return null;
+  }
+}
