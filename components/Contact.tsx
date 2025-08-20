@@ -124,7 +124,7 @@ const timeZoneOptions: Option[] = [
 ];
 
 // Lesson time options (00:00–23:00)
-const timeOptions = Array.from({ length: 24 }, (_, i) => 
+const timeOptions = Array.from({ length: 24 }, (_, i) =>
   `${String(i).padStart(2, '0')}:00`
 );
 
@@ -336,19 +336,29 @@ export default function Contact() {
         {/* Time Zone (select, required) */}
         <div className={styles.row}>
           <label htmlFor="timeZone" className={styles.label}>Time Zone</label>
-          <select
-            id="timeZone"
-            className={styles.input}
-            value={form.timeZone}
-            onChange={onChange('timeZone')}
-            required
-          >
-            <option value="">-- Select Time Zone --</option>
-            {timeZoneOptions.map((tz) => (
-              <option key={tz.value} value={tz.value}>{tz.label}</option>
-            ))}
-          </select>
+
+          {/* ← ここをラッパーにして、select の下に p を置く */}
+          <div className={styles.control}>
+            <select
+              id="timeZone"
+              className={styles.input}
+              value={form.timeZone}
+              onChange={onChange('timeZone')}
+              required
+              aria-describedby="timeZoneHelp"
+            >
+              <option value="">-- Select Time Zone --</option>
+              {timeZoneOptions.map((tz) => (
+                <option key={tz.value} value={tz.value}>{tz.label}</option>
+              ))}
+            </select>
+
+            <p id="timeZoneHelp" className={styles.help}>
+              Please select the trial lesson time in your local time zone.
+            </p>
+          </div>
         </div>
+
 
         {/* Preferred Platform（必須チェックボックス群） */}
         <div className={styles.row}>

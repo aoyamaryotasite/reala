@@ -271,21 +271,32 @@ export default function ContactPage() {
             </select>
           </div>
 
-          {/* Time Zone (select, required) */}
-          <div className={styles.row}>
-            <label htmlFor="timeZone" className={styles.label}>Time Zone</label>
+    
+        {/* Time Zone (select, required) */}
+        <div className={styles.row}>
+          <label htmlFor="timeZone" className={styles.label}>Time Zone</label>
+
+          {/* ← ここをラッパーにして、select の下に p を置く */}
+          <div className={styles.control}>
             <select
               id="timeZone"
               className={styles.input}
               value={form.timeZone}
               onChange={onChange('timeZone')}
+              required
+              aria-describedby="timeZoneHelp"
             >
               <option value="">-- Select Time Zone --</option>
               {timeZoneOptions.map((tz) => (
                 <option key={tz.value} value={tz.value}>{tz.label}</option>
               ))}
             </select>
+
+            <p id="timeZoneHelp" className={styles.help}>
+              Please select the trial lesson time in your local time zone.
+            </p>
           </div>
+        </div>
 
           {/* Preferred Platform（必須チェックボックス群） */}
           <div className={styles.row}>
