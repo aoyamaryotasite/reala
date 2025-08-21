@@ -31,7 +31,9 @@
   line-height: 1.4;
   color: #000;
 }
-
+.checkboxLabel input{
+  background-color: #fff;
+}
 .privacyLink:hover {
   color: #1d4c51;   /* hover時に少し濃い色 */
   text-decoration: underline;
@@ -48,7 +50,7 @@
   align-items: center;
   margin-bottom: 18px;
 }
-#timeZoneHelp{
+.help{
   color: #000;
 }
 .label {
