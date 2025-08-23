@@ -7,7 +7,23 @@ import { getColumns } from "../../lib/microcms";
 import Footer from "../../components/Footer";
 import HeroHeader from "../../components/HeroHeader";
 
+// app/courses/page.tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  // レイアウトの title.template が適用され、"Courses | REALA Japanese Academy" になります
+  title: "COLUMNS",
+  description: "We share columns with useful knowledge and tips for learning Japanese.",
+  alternates: {
+    canonical: "/columns", // metadataBase があるので絶対URLに展開される
+  },
+
+};
+
+
 export const revalidate = 300;
+
+
 
 // Promise で受け取る searchParams の型を自前定義
 type SearchParamsPromise<T extends Record<string, string | undefined>> = Promise<T>;

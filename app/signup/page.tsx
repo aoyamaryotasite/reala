@@ -4,6 +4,7 @@ import styles from '../../styles/contact.module.css';
 import Footer from '../../components/Footer';
 import HeroHeader from '../../components/HeroHeader';
 
+
 type FormState = {
   fullName: string;
   email: string;
