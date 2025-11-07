@@ -209,8 +209,8 @@ export default function Page() {
 
         />
         <PriceTable />
-        <AboutCEO
-          imageSrc="/ceo.png"  // 実際の画像パスに変更してください
+        {/* <AboutCEO
+          imageSrc="/ceo.png" 
           imageAlt="CEO"
           points={[
             "Over 10 years of experience in English education at high schools and personalized tutoring at cram schools.",
@@ -219,7 +219,7 @@ export default function Page() {
             "Full support in English (lesson bookings, grammar explanations, learning consultations, etc.).",
             "Fluent in Kansai-ben, providing native-level guidance on natural expressions."
           ]}
-        />
+        />  */}
         <Faq />
         <Contact />
         <FloatingTrialCTA
