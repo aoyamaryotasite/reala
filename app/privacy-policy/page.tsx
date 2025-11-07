@@ -7,15 +7,15 @@ import HeroHeader from "../../components/HeroHeader";
 // app/courses/page.tsx
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  // レイアウトの title.template が適用され、"Courses | REALA Japanese Academy" になります
-  title: "Privacy Policy",
-  description: "This is the page about the Privacy Policy.",
-  alternates: {
-    canonical: "/columns", // metadataBase があるので絶対URLに展開される
-  },
+// export const metadata: Metadata = {
+//   // レイアウトの title.template が適用され、"Courses | REALA Japanese Academy" になります
+//   title: "Privacy Policy",
+//   description: "This is the page about the Privacy Policy.",
+//   alternates: {
+//     canonical: "/columns", // metadataBase があるので絶対URLに展開される
+//   },
 
-};
+// };
 
 
 export default function PrivacyPolicy() {
